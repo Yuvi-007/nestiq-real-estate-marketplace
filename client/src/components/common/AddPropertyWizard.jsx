@@ -26,6 +26,7 @@ const defaultValues = {
   facing: '',
   amenitiesText: '',
   imagesText: '',
+  uploadedImages: [],
 }
 
 const steps = ['Basic Info', 'Location', 'Details', 'Media', 'Preview']
@@ -127,7 +128,10 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
     furnishing: formValues.furnishing.trim(),
     facing: formValues.facing.trim(),
     amenities: listFromText(formValues.amenitiesText),
-    images: listFromText(formValues.imagesText, '\n'),
+    images: [
+      ...(formValues.uploadedImages || []).map((image) => image.url),
+      ...listFromText(formValues.imagesText, '\n'),
+    ],
     status: 'active',
   })
 
@@ -136,7 +140,15 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
     setSuccessMessage('')
 
     try {
-      await onCreate(buildPayload(formValues))
+      const payload = buildPayload(formValues)
+
+      if (payload.images.length === 0) {
+        setErrorMessage('Please upload at least one image or add an image URL.')
+        setStep(3)
+        return
+      }
+
+      await onCreate(payload)
       reset(defaultValues)
       setStep(0)
       setSuccessMessage('Property published successfully.')
@@ -174,7 +186,7 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
         {step === 0 && <PropertyFormStepBasic register={register} errors={errors} />}
         {step === 1 && <LocationStep register={register} errors={errors} />}
         {step === 2 && <PropertyFormStepDetails register={register} errors={errors} />}
-        {step === 3 && <PropertyFormStepMedia register={register} errors={errors} />}
+        {step === 3 && <PropertyFormStepMedia register={register} control={control} />}
         {step === 4 && <PropertyFormStepPreview values={values} />}
 
         <div className="flex flex-wrap justify-between gap-3 border-t border-slate-100 pt-5">

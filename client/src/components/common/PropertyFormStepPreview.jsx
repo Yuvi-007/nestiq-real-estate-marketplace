@@ -6,10 +6,12 @@ const fallbackImage =
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80'
 
 function PropertyFormStepPreview({ values }) {
-  const images = (values.imagesText || '')
+  const uploadedImageUrls = (values.uploadedImages || []).map((image) => image.url)
+  const manualImageUrls = (values.imagesText || '')
     .split('\n')
     .map((url) => url.trim())
     .filter(Boolean)
+  const images = [...uploadedImageUrls, ...manualImageUrls]
   const image = images[0] || fallbackImage
 
   return (

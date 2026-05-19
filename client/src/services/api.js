@@ -16,6 +16,10 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${accessToken}`
   }
 
+  if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+    delete config.headers['Content-Type']
+  }
+
   return config
 })
 
@@ -157,6 +161,20 @@ export const propertyService = {
   },
   deleteProperty: async (id) => {
     const response = await api.delete(`/properties/${id}`)
+    return response.data
+  },
+}
+
+export const uploadService = {
+  uploadPropertyImages: async (files) => {
+    const formData = new FormData()
+
+    files.forEach((file) => {
+      formData.append('images', file)
+    })
+
+    const response = await api.post('/uploads/property-images', formData)
+
     return response.data
   },
 }
