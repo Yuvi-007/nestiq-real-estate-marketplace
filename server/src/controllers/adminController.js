@@ -1,0 +1,301 @@
+const mongoose = require('mongoose')
+
+const Property = require('../models/Property')
+const User = require('../models/User')
+
+const agentFields = 'name email phone avatar role isVerified'
+const allowedRoles = ['buyer', 'seller', 'agent', 'admin']
+const allowedStatuses = ['pending', 'active', 'sold', 'rejected']
+
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id)
+
+const cleanUser = (user) => {
+  const userObject = user.toObject ? user.toObject() : { ...user }
+  delete userObject.password
+  return userObject
+}
+
+const formatBreakdown = (items) =>
+  items.map((item) => ({
+    name: item._id || 'Unknown',
+    value: item.count,
+  }))
+
+const getAdminStats = async (req, res) => {
+  try {
+    const [
+      totalUsers,
+      totalProperties,
+      activeProperties,
+      pendingProperties,
+      soldProperties,
+      totalAgents,
+      totalBuyers,
+      totalSellers,
+      viewsResult,
+      recentProperties,
+      propertyTypeCounts,
+      userRoleCounts,
+      listingStatusCounts,
+    ] = await Promise.all([
+      User.countDocuments(),
+      Property.countDocuments(),
+      Property.countDocuments({ status: 'active' }),
+      Property.countDocuments({ status: 'pending' }),
+      Property.countDocuments({ status: 'sold' }),
+      User.countDocuments({ role: 'agent' }),
+      User.countDocuments({ role: 'buyer' }),
+      User.countDocuments({ role: 'seller' }),
+      Property.aggregate([{ $group: { _id: null, total: { $sum: '$views' } } }]),
+      Property.find()
+        .populate('agent', agentFields)
+        .sort({ createdAt: -1 })
+        .limit(5),
+      Property.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
+      User.aggregate([{ $group: { _id: '$role', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
+      Property.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
+    ])
+
+    res.json({
+      success: true,
+      data: {
+        totalUsers,
+        totalProperties,
+        activeProperties,
+        pendingProperties,
+        soldProperties,
+        totalAgents,
+        totalBuyers,
+        totalSellers,
+        totalViews: viewsResult[0]?.total || 0,
+        recentProperties,
+        propertyTypeBreakdown: formatBreakdown(propertyTypeCounts),
+        userRoleBreakdown: formatBreakdown(userRoleCounts),
+        listingStatusBreakdown: formatBreakdown(listingStatusCounts),
+      },
+    })
+  } catch (error) {
+    console.error('Admin stats error:', error.message)
+    res.status(500).json({ message: 'Unable to load admin stats' })
+  }
+}
+
+const getAdminUsers = async (req, res) => {
+  try {
+    const filter = {}
+
+    if (req.query.role) {
+      if (!allowedRoles.includes(req.query.role)) {
+        return res.status(400).json({ message: 'Invalid role filter' })
+      }
+
+      filter.role = req.query.role
+    }
+
+    const users = await User.find(filter).select('-password').sort({ createdAt: -1 })
+
+    res.json({
+      success: true,
+      count: users.length,
+      data: users,
+    })
+  } catch (error) {
+    console.error('Admin users error:', error.message)
+    res.status(500).json({ message: 'Unable to load users' })
+  }
+}
+
+const updateAdminUser = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid user ID' })
+    }
+
+    const updatePayload = {}
+    const allowedFields = ['role', 'isVerified', 'phone', 'name']
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updatePayload[field] = req.body[field]
+      }
+    })
+
+    if (req.body.password !== undefined) {
+      return res.status(400).json({ message: 'Password cannot be updated from admin user settings' })
+    }
+
+    if (updatePayload.role && !allowedRoles.includes(updatePayload.role)) {
+      return res.status(400).json({ message: 'Role must be buyer, seller, agent, or admin' })
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, updatePayload, {
+      new: true,
+      runValidators: true,
+    }).select('-password')
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    res.json({
+      success: true,
+      message: 'User updated successfully',
+      data: cleanUser(updatedUser),
+    })
+  } catch (error) {
+    console.error('Admin update user error:', error.message)
+
+    if (error.name === 'ValidationError') {
+      const firstError = Object.values(error.errors)[0]
+      return res.status(400).json({ message: firstError.message })
+    }
+
+    res.status(500).json({ message: 'Unable to update user' })
+  }
+}
+
+const deleteAdminUser = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid user ID' })
+    }
+
+    if (req.params.id === req.user._id.toString()) {
+      return res.status(400).json({ message: 'Admins cannot delete their own account' })
+    }
+
+    const user = await User.findById(req.params.id)
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    await user.deleteOne()
+
+    res.json({
+      success: true,
+      message: 'User deleted successfully',
+    })
+  } catch (error) {
+    console.error('Admin delete user error:', error.message)
+    res.status(500).json({ message: 'Unable to delete user' })
+  }
+}
+
+const getAdminProperties = async (req, res) => {
+  try {
+    const properties = await Property.find()
+      .populate('agent', agentFields)
+      .sort({ createdAt: -1 })
+
+    res.json({
+      success: true,
+      count: properties.length,
+      data: properties,
+    })
+  } catch (error) {
+    console.error('Admin properties error:', error.message)
+    res.status(500).json({ message: 'Unable to load properties' })
+  }
+}
+
+const updatePropertyStatus = async (propertyId, status, rejectionReason) => {
+  const updatePayload = { status }
+
+  if (status === 'rejected') {
+    updatePayload.rejectionReason = rejectionReason || ''
+  }
+
+  if (status !== 'rejected') {
+    updatePayload.rejectionReason = ''
+  }
+
+  return Property.findByIdAndUpdate(propertyId, updatePayload, {
+    new: true,
+    runValidators: true,
+  }).populate('agent', agentFields)
+}
+
+const setAdminPropertyApproved = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid property ID' })
+    }
+
+    const property = await updatePropertyStatus(req.params.id, 'active')
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' })
+    }
+
+    res.json({
+      success: true,
+      message: 'Property approved successfully',
+      data: property,
+    })
+  } catch (error) {
+    console.error('Admin approve property error:', error.message)
+    res.status(500).json({ message: 'Unable to approve property' })
+  }
+}
+
+const setAdminPropertyRejected = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid property ID' })
+    }
+
+    const property = await updatePropertyStatus(req.params.id, 'rejected', req.body.rejectionReason)
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' })
+    }
+
+    res.json({
+      success: true,
+      message: 'Property rejected successfully',
+      data: property,
+    })
+  } catch (error) {
+    console.error('Admin reject property error:', error.message)
+    res.status(500).json({ message: 'Unable to reject property' })
+  }
+}
+
+const setAdminPropertyStatus = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid property ID' })
+    }
+
+    if (!allowedStatuses.includes(req.body.status)) {
+      return res.status(400).json({ message: 'Status must be pending, active, sold, or rejected' })
+    }
+
+    const property = await updatePropertyStatus(req.params.id, req.body.status, req.body.rejectionReason)
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' })
+    }
+
+    res.json({
+      success: true,
+      message: 'Property status updated successfully',
+      data: property,
+    })
+  } catch (error) {
+    console.error('Admin update property status error:', error.message)
+    res.status(500).json({ message: 'Unable to update property status' })
+  }
+}
+
+module.exports = {
+  getAdminStats,
+  getAdminUsers,
+  updateAdminUser,
+  deleteAdminUser,
+  getAdminProperties,
+  setAdminPropertyApproved,
+  setAdminPropertyRejected,
+  setAdminPropertyStatus,
+}

@@ -1,0 +1,43 @@
+import SortDropdown from './SortDropdown'
+import ViewToggle from './ViewToggle'
+
+function getSummary(filters) {
+  const parts = []
+
+  if (filters.type) parts.push(filters.type)
+  if (filters.city) parts.push(`in ${filters.city}`)
+  if (filters.q) parts.push(`matching "${filters.q}"`)
+
+  if (parts.length === 0) {
+    return 'Showing all verified marketplace listings'
+  }
+
+  return `Results for ${parts.join(' ')}`
+}
+
+function ResultsToolbar({ count, filters, onSortChange, viewMode, onViewChange, onOpenFilters }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-lg font-extrabold text-primary">Showing {count} properties</p>
+          <p className="mt-1 text-sm text-slate-600">{getSummary(filters)}</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={onOpenFilters}
+            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-primary lg:hidden"
+          >
+            Filters
+          </button>
+          <SortDropdown value={filters.sort} onChange={onSortChange} />
+          <ViewToggle viewMode={viewMode} onChange={onViewChange} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default ResultsToolbar
