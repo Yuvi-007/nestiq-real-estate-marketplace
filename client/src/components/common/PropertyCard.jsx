@@ -61,8 +61,10 @@ function PropertyCard({
   variant = 'grid',
   isCompared = false,
   isCompareDisabled = false,
+  isHighlighted = false,
   onToggleCompare,
   onQuickView,
+  onHover,
 }) {
   const [saveError, setSaveError] = useState('')
   const { isPropertySaved, savingPropertyId, toggleSavedProperty } = useSavedProperties()
@@ -96,7 +98,11 @@ function PropertyCard({
     <motion.article
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+      onMouseEnter={() => onHover?.(property._id)}
+      onMouseLeave={() => onHover?.('')}
+      className={`group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+        isHighlighted ? 'border-accent ring-4 ring-accent/20' : 'border-slate-200'
+      } ${
         isList ? 'grid md:grid-cols-[320px_minmax(0,1fr)]' : 'flex h-full min-w-0 flex-col'
       }`}
     >

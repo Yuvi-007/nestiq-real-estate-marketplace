@@ -132,6 +132,8 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false)
   const [quickViewProperty, setQuickViewProperty] = useState(null)
   const [compareProperties, setCompareProperties] = useState([])
+  const [highlightedPropertyId, setHighlightedPropertyId] = useState('')
+  const [selectedMapPropertyId, setSelectedMapPropertyId] = useState('')
 
   const apiParams = useMemo(() => getApiParams(appliedFilters), [appliedFilters])
   const { data, isLoading, isError, error, refetch } = useProperties(apiParams)
@@ -259,8 +261,10 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
             variant={viewMode === 'list' ? 'list' : 'grid'}
             isCompared={comparedIds.includes(property._id)}
             isCompareDisabled={compareProperties.length >= 3}
+            isHighlighted={highlightedPropertyId === property._id || selectedMapPropertyId === property._id}
             onToggleCompare={toggleCompare}
             onQuickView={setQuickViewProperty}
+            onHover={setHighlightedPropertyId}
           />
         ))}
       </div>
@@ -320,8 +324,35 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
               />
             }
           >
-            <MapView properties={properties} className="h-[72vh]" />
+            <MapView
+              properties={properties}
+              className="h-[72vh]"
+              highlightedPropertyId={highlightedPropertyId}
+              selectedPropertyId={selectedMapPropertyId}
+              onPropertyHover={setHighlightedPropertyId}
+              onPropertySelect={setSelectedMapPropertyId}
+            />
           </Suspense>
+          <div className="lg:col-start-2">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="text-sm font-extrabold text-primary">Map result cards</p>
+              <p className="text-xs font-semibold text-slate-500">Hover cards or markers to connect results.</p>
+            </div>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property._id}
+                  property={property}
+                  isCompared={comparedIds.includes(property._id)}
+                  isCompareDisabled={compareProperties.length >= 3}
+                  isHighlighted={highlightedPropertyId === property._id || selectedMapPropertyId === property._id}
+                  onToggleCompare={toggleCompare}
+                  onQuickView={setQuickViewProperty}
+                  onHover={setHighlightedPropertyId}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
