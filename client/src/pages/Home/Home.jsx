@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 import CTASection from '../../components/common/CTASection'
 import CityMarquee from '../../components/common/CityMarquee'
@@ -10,6 +11,38 @@ import RecentSearches from '../../components/common/RecentSearches'
 import SearchBar from '../../components/common/SearchBar'
 import StatsSection from '../../components/common/StatsSection'
 import Testimonials from '../../components/common/Testimonials'
+
+const topCities = [
+  ['Mumbai', 'mumbai', 'Sea-view apartments and luxury towers'],
+  ['Pune', 'pune', 'IT corridors and gated communities'],
+  ['Goa', 'goa', 'Beachside villas and lifestyle homes'],
+  ['Bangalore', 'bangalore', 'Tech-led residential markets'],
+]
+
+function ExploreTopCities() {
+  return (
+    <section className="bg-surface px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="max-w-2xl">
+          <p className="text-sm font-bold uppercase text-accent">Explore top cities</p>
+          <h2 className="mt-3 font-display text-4xl font-bold text-primary">City guides for high-intent markets</h2>
+          <p className="mt-4 text-sm leading-6 text-slate-600">
+            Market insights are demo estimates for project presentation.
+          </p>
+        </div>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {topCities.map(([city, slug, text]) => (
+            <Link key={slug} to={`/city/${slug}`} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent hover:shadow-xl">
+              <p className="text-2xl font-extrabold text-primary">{city}</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{text}</p>
+              <span className="mt-5 inline-flex text-sm font-extrabold text-accent">View city guide</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 function Home() {
   return (
@@ -60,6 +93,7 @@ function Home() {
       </section>
 
       <CityMarquee />
+      <ExploreTopCities />
       <StatsSection />
       <FeaturedListings />
       <HowItWorks />

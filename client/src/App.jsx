@@ -8,6 +8,7 @@ import PageLoader from './components/common/PageLoader'
 const AdminPanel = lazy(() => import('./pages/AdminPanel/AdminPanel'))
 const Agents = lazy(() => import('./pages/Agents/Agents'))
 const Buy = lazy(() => import('./pages/Buy/Buy'))
+const CityLanding = lazy(() => import('./pages/CityLanding/CityLanding'))
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const Home = lazy(() => import('./pages/Home/Home'))
 const HomeValue = lazy(() => import('./pages/HomeValue/HomeValue'))
@@ -35,6 +36,7 @@ function App() {
         <Route path="/mortgage" element={<RouteBoundary><Mortgage /></RouteBoundary>} />
         <Route path="/agents" element={<RouteBoundary><Agents /></RouteBoundary>} />
         <Route path="/home-value" element={<RouteBoundary><HomeValue /></RouteBoundary>} />
+        <Route path="/city/:citySlug" element={<RouteBoundary><CityLanding /></RouteBoundary>} />
         <Route path="/properties" element={<RouteBoundary><Properties /></RouteBoundary>} />
         <Route path="/properties/:id" element={<RouteBoundary><PropertyDetail /></RouteBoundary>} />
         <Route path="/login" element={<RouteBoundary><Login /></RouteBoundary>} />
