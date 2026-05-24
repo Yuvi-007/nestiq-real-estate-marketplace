@@ -6,8 +6,8 @@ function Modal({ isOpen, onClose, eyebrow, title, subtitle, children, footer, ma
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary/70 px-4 py-6 backdrop-blur-sm">
-      <section className={`w-full ${maxWidth} overflow-hidden rounded-2xl bg-white shadow-2xl`} role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary/70 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6">
+      <section className={`max-h-[90vh] w-full ${maxWidth} overflow-hidden rounded-2xl bg-white shadow-2xl`} role="dialog" aria-modal="true">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 p-5">
           <div>
             {eyebrow && <p className="text-sm font-bold uppercase tracking-wide text-accent">{eyebrow}</p>}
@@ -23,7 +23,7 @@ function Modal({ isOpen, onClose, eyebrow, title, subtitle, children, footer, ma
             <X size={18} />
           </button>
         </div>
-        <div className="p-5">{children}</div>
+        <div className="max-h-[calc(90vh-9rem)] overflow-y-auto p-4 sm:p-5">{children}</div>
         {footer && <div className="border-t border-slate-100 bg-surface px-5 py-4">{footer}</div>}
       </section>
     </div>

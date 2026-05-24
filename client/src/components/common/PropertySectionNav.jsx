@@ -19,7 +19,7 @@ function PropertySectionNav() {
 
   return (
     <nav className="sticky top-16 z-30 -mx-4 border-y border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto">
+      <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto overscroll-x-contain pb-1">
         {sections.map((section) => (
           <button
             key={section.id}

@@ -6,7 +6,7 @@ import heroImage from '../../assets/hero.png'
 function AuthLayout({ children, eyebrow, title, subtitle }) {
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.10)]">
-      <div className="grid min-h-[720px] lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="grid min-h-[auto] lg:min-h-[720px] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
         <div className="relative hidden overflow-hidden bg-primary lg:block">
           <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover opacity-75" />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/70 to-accent/50" />
@@ -45,7 +45,7 @@ function AuthLayout({ children, eyebrow, title, subtitle }) {
           </div>
         </div>
 
-        <div className="flex items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+        <div className="flex min-w-0 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
           <div className="w-full max-w-md">
             <div className="mb-8 lg:hidden">
               <Link to="/" className="flex items-center gap-3">

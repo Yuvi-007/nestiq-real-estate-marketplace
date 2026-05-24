@@ -26,7 +26,7 @@ function ResultsToolbar({ count, filters, onSortChange, viewMode, onViewChange, 
           <p className="mt-1 text-sm text-slate-600">{getSummary(filters)}</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
           <Button variant="secondary" size="sm" onClick={onOpenFilters} className="lg:hidden">
             Filters
           </Button>

@@ -43,7 +43,7 @@ function AdminRiskOverview({ stats, properties }) {
           <p className="px-4 py-5 text-sm font-semibold text-slate-600">No high-risk listings detected.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
+            <table className="min-w-[680px] divide-y divide-slate-200 text-sm">
               <thead className="bg-slate-50 text-left text-xs font-extrabold uppercase text-slate-500">
                 <tr>
                   <th className="px-4 py-3">Listing</th>

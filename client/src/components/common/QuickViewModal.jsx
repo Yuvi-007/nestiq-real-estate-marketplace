@@ -28,7 +28,7 @@ function QuickViewModal({ property, onClose }) {
   const amenities = property.amenities || []
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center px-3 py-4 sm:px-4 sm:py-6">
       <button
         type="button"
         className="absolute inset-0 bg-primary/70 backdrop-blur-sm"
@@ -39,7 +39,7 @@ function QuickViewModal({ property, onClose }) {
       <motion.article
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="relative grid max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl bg-white shadow-2xl md:grid-cols-[1fr_1.1fr]"
+        className="relative grid max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-2xl bg-white shadow-2xl md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]"
       >
         <button
           type="button"
@@ -50,7 +50,7 @@ function QuickViewModal({ property, onClose }) {
           <X size={20} />
         </button>
 
-        <div className="relative min-h-72 bg-slate-100">
+        <div className="relative h-56 bg-slate-100 sm:h-72 md:h-auto md:min-h-full">
           <img src={image} alt={property.title} className="h-full w-full object-cover" />
           {property.badge && (
             <span className="absolute left-5 top-5 rounded-full bg-accent px-3 py-1 text-xs font-extrabold text-primary">
@@ -59,9 +59,9 @@ function QuickViewModal({ property, onClose }) {
           )}
         </div>
 
-        <div className="p-6 sm:p-8">
-          <p className="text-3xl font-extrabold text-primary">{formatPrice(property.price)}</p>
-          <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-primary">{property.title}</h2>
+        <div className="min-w-0 p-5 sm:p-8">
+          <p className="text-2xl font-extrabold text-primary sm:text-3xl">{formatPrice(property.price)}</p>
+          <h2 className="mt-3 font-display text-2xl font-bold leading-tight text-primary sm:text-3xl">{property.title}</h2>
 
           <p className="mt-4 flex gap-2 text-sm leading-6 text-slate-600">
             <MapPin size={17} className="mt-0.5 shrink-0 text-accent" />

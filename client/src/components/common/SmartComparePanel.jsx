@@ -59,7 +59,7 @@ function SmartComparePanel({ properties }) {
         <BarChart3 size={17} className="text-accent" />
         Smart compare insights
       </p>
-      <div className="mt-3 grid gap-3 md:grid-cols-5">
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {insightConfig.map((insight) => {
           const property = insight.pick(properties)
           const Icon = insight.icon

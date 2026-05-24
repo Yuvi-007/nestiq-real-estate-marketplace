@@ -114,7 +114,7 @@ function PropertyFormStepMedia({ register, control }) {
       )}
 
       {uploadedImages.length > 0 && (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-4">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))] gap-4">
           {uploadedImages.map((image) => (
             <div key={image.publicId} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <img src={image.url} alt="Uploaded property" className="aspect-[4/3] w-full object-cover" />

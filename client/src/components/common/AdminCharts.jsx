@@ -16,7 +16,7 @@ const chartColors = ['#0F172A', '#F59E0B', '#10B981', '#F43F5E', '#64748B', '#38
 
 function EmptyChart({ title }) {
   return (
-    <Card>
+    <Card className="min-w-0 overflow-hidden">
       <h3 className="text-lg font-extrabold text-primary">{title}</h3>
       <div className="mt-4 flex h-64 items-center justify-center rounded-2xl bg-slate-50 text-sm font-semibold text-slate-500">
         No chart data yet
@@ -31,7 +31,7 @@ function DonutChart({ title, data }) {
   }
 
   return (
-    <Card>
+    <Card className="min-w-0 overflow-hidden">
       <h3 className="text-lg font-extrabold text-primary">{title}</h3>
       <div className="mt-4 h-64">
         <ResponsiveContainer width="100%" height="100%">
@@ -66,7 +66,7 @@ function StatusChart({ data }) {
   }
 
   return (
-    <Card className="lg:col-span-2">
+    <Card className="min-w-0 overflow-hidden lg:col-span-2">
       <h3 className="text-lg font-extrabold text-primary">Listing Status</h3>
       <div className="mt-4 h-64">
         <ResponsiveContainer width="100%" height="100%">

@@ -27,7 +27,7 @@ function RecentlyViewed({ onQuickView, comparedIds = [], onToggleCompare }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-5">
         {recentProperties.map((property) => (
           <PropertyCard
             key={property._id}

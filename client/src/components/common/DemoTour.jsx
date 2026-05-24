@@ -123,7 +123,7 @@ function DemoTour() {
       <button
         type="button"
         onClick={openTour}
-        className="fixed bottom-24 right-4 z-[70] inline-flex items-center gap-2 rounded-full border border-amber-200 bg-primary px-4 py-3 text-xs font-extrabold text-white shadow-[0_18px_50px_rgba(15,23,42,0.24)] transition hover:-translate-y-0.5 hover:bg-charcoal sm:bottom-6 sm:right-6 sm:text-sm"
+        className="fixed bottom-36 right-4 z-[70] inline-flex items-center gap-2 rounded-full border border-amber-200 bg-primary px-4 py-3 text-xs font-extrabold text-white shadow-[0_18px_50px_rgba(15,23,42,0.24)] transition hover:-translate-y-0.5 hover:bg-charcoal sm:bottom-6 sm:right-6 sm:text-sm"
         aria-label="Open Demo Tour"
       >
         <Sparkles size={16} className="text-accent" />
@@ -134,7 +134,7 @@ function DemoTour() {
       {isOpen && (
         <div className="fixed inset-0 z-[90] flex items-end justify-center bg-slate-950/55 px-3 py-4 backdrop-blur-sm sm:items-center sm:px-6">
           <section
-            className="w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_30px_100px_rgba(15,23,42,0.34)]"
+            className="max-h-[92vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_30px_100px_rgba(15,23,42,0.34)]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="demo-tour-title"
@@ -173,7 +173,7 @@ function DemoTour() {
               </div>
             </div>
 
-            <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_240px]">
+            <div className="grid max-h-[calc(92vh-13rem)] gap-5 overflow-y-auto p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_240px]">
               <div>
                 <p className="text-sm leading-7 text-slate-600">{activeStep.description}</p>
 

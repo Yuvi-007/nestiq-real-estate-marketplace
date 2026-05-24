@@ -53,7 +53,7 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
         ))}
       </div>
 
-      <div className="grid gap-3 pt-4 lg:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
+      <div className="grid gap-3 pt-4 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
         <Input
           type="search"
           value={filters.q}
@@ -93,7 +93,7 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
           ))}
           <option value="Custom budget">Custom budget</option>
         </Input>
-        <Button variant="accent" size="lg" icon={Search} onClick={onSearch}>
+        <Button variant="accent" size="lg" icon={Search} onClick={onSearch} className="w-full xl:w-auto">
           Search
         </Button>
       </div>

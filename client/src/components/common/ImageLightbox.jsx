@@ -20,7 +20,7 @@ function ImageLightbox({ images, activeIndex, title, onClose, onNext, onPrevious
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 px-4 py-6">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 px-3 py-5 sm:px-4 sm:py-6">
       <button
         type="button"
         onClick={onClose}
@@ -39,7 +39,7 @@ function ImageLightbox({ images, activeIndex, title, onClose, onNext, onPrevious
         <ChevronLeft size={26} />
       </button>
 
-      <img src={activeImage.src} alt={title} className="max-h-[82vh] max-w-full rounded-2xl object-contain shadow-2xl" />
+      <img src={activeImage.src} alt={title} className="max-h-[78vh] max-w-full rounded-2xl object-contain shadow-2xl sm:max-h-[82vh]" />
 
       <button
         type="button"
@@ -50,12 +50,12 @@ function ImageLightbox({ images, activeIndex, title, onClose, onNext, onPrevious
         <ChevronRight size={26} />
       </button>
 
-      <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur">
+      <div className="absolute bottom-4 left-1/2 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur">
         <button type="button" onClick={onPrevious} className="sm:hidden" aria-label="Previous image">
           <ChevronLeft size={20} />
         </button>
-        <span>
-          {activeIndex + 1}/{images.length} · {activeImage.category}
+        <span className="truncate">
+          {activeIndex + 1}/{images.length} - {activeImage.category}
         </span>
         <button type="button" onClick={onNext} className="sm:hidden" aria-label="Next image">
           <ChevronRight size={20} />

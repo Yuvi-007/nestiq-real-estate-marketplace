@@ -23,7 +23,7 @@ function FeaturedListings() {
           </Link>
         </div>
 
-        <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
+        <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-6">
           {isLoading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <div key={index} className="h-96 animate-pulse rounded-2xl bg-slate-200" />

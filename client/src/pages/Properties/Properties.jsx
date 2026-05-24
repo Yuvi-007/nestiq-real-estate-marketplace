@@ -210,7 +210,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
           className={
             viewMode === 'list'
               ? 'grid gap-5'
-              : 'grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6'
+              : 'grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-6'
           }
         >
           {Array.from({ length: 6 }).map((_, index) => (
@@ -251,7 +251,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
         className={
           viewMode === 'list'
             ? 'grid gap-5'
-            : 'grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6'
+            : 'grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-6'
         }
       >
         {properties.map((property) => (
@@ -318,7 +318,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
             fallback={
               <PageLoader
                 compact
-                className="h-[72vh]"
+                className="h-[60vh] min-h-[360px] lg:h-[72vh]"
                 title="Loading map view"
                 message="Preparing the map tiles and property markers."
               />
@@ -326,7 +326,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
           >
             <MapView
               properties={properties}
-              className="h-[72vh]"
+              className="h-[60vh] min-h-[360px] lg:h-[72vh]"
               highlightedPropertyId={highlightedPropertyId}
               selectedPropertyId={selectedMapPropertyId}
               onPropertyHover={setHighlightedPropertyId}
@@ -338,7 +338,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
               <p className="text-sm font-extrabold text-primary">Map result cards</p>
               <p className="text-xs font-semibold text-slate-500">Hover cards or markers to connect results.</p>
             </div>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-5">
               {properties.map((property) => (
                 <PropertyCard
                   key={property._id}
@@ -364,7 +364,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
             className="hidden lg:block lg:sticky lg:top-24 lg:self-start"
           />
 
-          <div className="min-w-0">{renderResults()}</div>
+          <div className="min-w-0 pb-24 md:pb-0">{renderResults()}</div>
         </div>
       )}
 

@@ -58,7 +58,7 @@ function SearchBar() {
         ))}
       </div>
 
-      <div className="grid gap-3 pt-4 md:grid-cols-[1.2fr_1fr_1fr_auto]">
+      <div className="grid gap-3 pt-4 lg:grid-cols-[1.2fr_1fr_1fr_auto]">
         <input
           value={city}
           onChange={(event) => setCity(event.target.value)}
@@ -93,7 +93,7 @@ function SearchBar() {
         </select>
         <button
           type="submit"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-extrabold text-primary shadow-lg transition hover:bg-amber-400"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-extrabold text-primary shadow-lg transition hover:bg-amber-400 lg:w-auto"
         >
           <Search size={18} />
           Search

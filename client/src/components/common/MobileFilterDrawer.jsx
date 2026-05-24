@@ -14,7 +14,7 @@ function MobileFilterDrawer({ isOpen, filters, onChange, onApply, onClear, onClo
   return (
     <div className="fixed inset-0 z-[70] lg:hidden">
       <button type="button" className="absolute inset-0 bg-primary/60" aria-label="Close filters" onClick={onClose} />
-      <div className="absolute bottom-0 left-0 right-0 max-h-[88vh] overflow-y-auto rounded-t-2xl bg-surface p-4 shadow-2xl">
+      <div className="absolute bottom-0 left-0 right-0 max-h-[88vh] overflow-y-auto rounded-t-2xl bg-surface p-4 pb-24 shadow-2xl">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-lg font-extrabold text-primary">Filters</p>
           <button

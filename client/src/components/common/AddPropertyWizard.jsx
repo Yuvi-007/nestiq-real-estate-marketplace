@@ -184,7 +184,7 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
     <Card>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <SectionHeader eyebrow="Add property" title="Publish a new listing" />
-        <div className="flex flex-wrap gap-2">
+        <div className="flex max-w-full flex-wrap gap-2">
           {steps.map((label, index) => (
             <span
               key={label}
@@ -219,12 +219,13 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
           )}
         </div>
 
-        <div className="flex flex-wrap justify-between gap-3 border-t border-slate-100 pt-5">
+        <div className="flex flex-col justify-between gap-3 border-t border-slate-100 pt-5 sm:flex-row">
           <Button
             variant="secondary"
             onClick={previousStep}
             disabled={step === 0}
             icon={ChevronLeft}
+            className="w-full sm:w-auto"
           >
             Back
           </Button>
@@ -234,6 +235,7 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
               onClick={nextStep}
               icon={ChevronRight}
               iconPosition="right"
+              className="w-full sm:w-auto"
             >
               Continue
             </Button>
@@ -243,6 +245,7 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
               disabled={isSubmitting}
               icon={Send}
               iconPosition="right"
+              className="w-full sm:w-auto"
             >
               {isSubmitting ? 'Publishing...' : 'Publish Property'}
             </Button>

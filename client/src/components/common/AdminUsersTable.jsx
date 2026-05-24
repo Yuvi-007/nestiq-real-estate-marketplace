@@ -19,7 +19,7 @@ function AdminUsersTable({ users, currentUserId, onUpdateUser, onDeleteUser, bus
   return (
     <Card padded={false} className="overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
+        <table className="min-w-[900px] divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50 text-left text-xs font-extrabold uppercase tracking-wide text-slate-500">
             <tr>
               <th className="px-5 py-4">Name</th>

@@ -12,7 +12,7 @@ function CompareBar({ properties, onRemove, onClear }) {
     <motion.div
       initial={{ y: 90, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed inset-x-3 bottom-20 z-[60] rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl md:bottom-5"
+      className="fixed inset-x-3 bottom-20 z-[60] max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl md:bottom-5 md:max-h-[80vh]"
     >
       <div className="mx-auto max-w-6xl space-y-4">
         <SmartComparePanel properties={properties} />
@@ -35,7 +35,7 @@ function CompareBar({ properties, onRemove, onClear }) {
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <button type="button" onClick={onClear} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-primary">
               Clear
             </button>

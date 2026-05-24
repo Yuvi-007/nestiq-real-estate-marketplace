@@ -103,7 +103,7 @@ function PropertyCard({
       className={`group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
         isHighlighted ? 'border-accent ring-4 ring-accent/20' : 'border-slate-200'
       } ${
-        isList ? 'grid md:grid-cols-[320px_minmax(0,1fr)]' : 'flex h-full min-w-0 flex-col'
+        isList ? 'grid min-w-0 md:grid-cols-[minmax(240px,320px)_minmax(0,1fr)]' : 'flex h-full min-w-0 flex-col'
       }`}
     >
       <div className={`relative overflow-hidden bg-slate-100 ${isList ? 'aspect-[16/10] md:aspect-auto md:min-h-full' : 'aspect-[4/3]'}`}>
@@ -134,7 +134,7 @@ function PropertyCard({
         </motion.button>
       </div>
 
-      <div className={`${isList ? 'p-6' : 'p-5'} flex min-w-0 flex-1 flex-col`}>
+      <div className={`${isList ? 'p-5 sm:p-6' : 'p-5'} flex min-w-0 flex-1 flex-col`}>
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-2xl font-extrabold text-primary">{formatPrice(property.price)}</p>
