@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import Card from '../ui/Card'
 import SectionHeader from '../ui/SectionHeader'
 
-const popularSearches = [
+const defaultPopularSearches = [
   { label: 'Villas in Goa', params: { type: 'Villa', city: 'Goa' } },
   { label: '3 BHK in Mumbai', params: { bhk: '3', city: 'Mumbai' } },
-  { label: 'Flats under ₹1Cr in Pune', params: { type: 'Apartment', city: 'Pune', maxPrice: '10000000' } },
+  { label: 'Flats under Rs. 1Cr in Pune', params: { type: 'Apartment', city: 'Pune', maxPrice: '10000000' } },
   { label: 'Apartments in Bangalore', params: { type: 'Apartment', city: 'Bangalore' } },
   { label: 'Houses in Nashik', params: { type: 'House', city: 'Nashik' } },
   { label: 'Luxury homes in Gurgaon', params: { q: 'luxury', city: 'Gurgaon' } },
-  { label: 'PG in Delhi', params: { type: 'PG', city: 'Delhi' } },
   { label: 'Sea-view homes in Goa', params: { q: 'sea view', city: 'Goa' } },
 ]
 
@@ -25,7 +24,12 @@ const toSearchParams = (params) => {
   return searchParams.toString()
 }
 
-function PopularSearches({ compact = false }) {
+function PopularSearches({
+  compact = false,
+  searches = defaultPopularSearches,
+  title,
+  description,
+}) {
   const navigate = useNavigate()
 
   const openSearch = (params) => {
@@ -36,11 +40,11 @@ function PopularSearches({ compact = false }) {
     <Card className={compact ? 'bg-white/95 shadow-xl backdrop-blur' : ''}>
       <SectionHeader
         eyebrow="Popular searches"
-        title={compact ? 'Quick search paths' : 'Popular buyer searches'}
-        description={compact ? undefined : 'Jump into common search paths inspired by how buyers browse premium marketplaces.'}
+        title={title || (compact ? 'Quick search paths' : 'Popular buyer searches')}
+        description={compact ? undefined : description || 'Jump into common search paths inspired by how buyers browse premium marketplaces.'}
       />
       <div className="mt-5 flex flex-wrap gap-2">
-        {popularSearches.map((search) => (
+        {searches.map((search) => (
           <button
             key={search.label}
             type="button"

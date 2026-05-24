@@ -20,17 +20,19 @@ function Footer() {
         <div>
           <h2 className="text-sm font-bold uppercase text-primary">Explore</h2>
           <div className="mt-4 grid gap-3 text-sm text-slate-600">
-            <Link to="/properties?mode=buy" className="hover:text-primary">Buy property</Link>
-            <Link to="/properties?mode=rent" className="hover:text-primary">Rent property</Link>
-            <Link to="/dashboard/seller" className="hover:text-primary">Sell with NestIQ</Link>
+            <Link to="/buy" className="hover:text-primary">Buy property</Link>
+            <Link to="/rent" className="hover:text-primary">Rent property</Link>
+            <Link to="/sell" className="hover:text-primary">Sell with NestIQ</Link>
+            <Link to="/mortgage" className="hover:text-primary">Home Loan & EMI Center</Link>
           </div>
         </div>
 
         <div>
-          <h2 className="text-sm font-bold uppercase text-primary">Account</h2>
+          <h2 className="text-sm font-bold uppercase text-primary">Tools</h2>
           <div className="mt-4 grid gap-3 text-sm text-slate-600">
+            <Link to="/agents" className="hover:text-primary">Find agents</Link>
+            <Link to="/home-value" className="hover:text-primary">Home value estimate</Link>
             <Link to="/login" className="hover:text-primary">Sign in</Link>
-            <Link to="/register" className="hover:text-primary">Create account</Link>
             <Link to="/dashboard" className="hover:text-primary">Dashboard</Link>
           </div>
         </div>

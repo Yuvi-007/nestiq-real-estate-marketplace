@@ -10,6 +10,8 @@ import Button from '../ui/Button'
 import Card from '../ui/Card'
 import Input from '../ui/Input'
 import SectionHeader from '../ui/SectionHeader'
+import ListingQualityChecklist from './ListingQualityChecklist'
+import { calculateListingQuality } from '../../utils/listingQuality'
 
 const defaultValues = {
   title: '',
@@ -93,6 +95,7 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
   const [step, setStep] = useState(0)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [warningMessage, setWarningMessage] = useState('')
   const {
     register,
     handleSubmit,
@@ -152,6 +155,7 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
   const onSubmit = async (formValues) => {
     setErrorMessage('')
     setSuccessMessage('')
+    setWarningMessage('')
 
     try {
       const payload = buildPayload(formValues)
@@ -160,6 +164,11 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
         setErrorMessage('Please upload at least one image or add an image URL.')
         setStep(3)
         return
+      }
+
+      const quality = calculateListingQuality(formValues)
+      if (quality.completionScore < 70) {
+        setWarningMessage('Your listing quality is low. You can publish, but improving it may increase buyer trust.')
       }
 
       await onCreate(payload)
@@ -191,14 +200,24 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
       </div>
 
       {successMessage && <div className="mt-5 rounded-2xl border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">{successMessage}</div>}
+      {warningMessage && <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">{warningMessage}</div>}
       {errorMessage && <div className="mt-5 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">{errorMessage}</div>}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
-        {step === 0 && <PropertyFormStepBasic register={register} errors={errors} />}
-        {step === 1 && <LocationStep register={register} errors={errors} />}
-        {step === 2 && <PropertyFormStepDetails register={register} errors={errors} />}
-        {step === 3 && <PropertyFormStepMedia register={register} control={control} />}
-        {step === 4 && <PropertyFormStepPreview values={values} />}
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div>
+            {step === 0 && <PropertyFormStepBasic register={register} errors={errors} />}
+            {step === 1 && <LocationStep register={register} errors={errors} />}
+            {step === 2 && <PropertyFormStepDetails register={register} errors={errors} />}
+            {step === 3 && <PropertyFormStepMedia register={register} control={control} />}
+            {step === 4 && <PropertyFormStepPreview values={values} />}
+          </div>
+          {step !== 4 && (
+            <aside className="xl:sticky xl:top-24 xl:self-start">
+              <ListingQualityChecklist data={values} compact />
+            </aside>
+          )}
+        </div>
 
         <div className="flex flex-wrap justify-between gap-3 border-t border-slate-100 pt-5">
           <Button

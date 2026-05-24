@@ -4,10 +4,11 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
 const navItems = [
-  { label: 'Buy', to: '/properties?mode=buy' },
-  { label: 'Rent', to: '/properties?mode=rent' },
-  { label: 'Sell', to: '/dashboard/seller' },
-  { label: 'Agents', to: '/properties?verifiedOnly=true' },
+  { label: 'Buy', to: '/buy' },
+  { label: 'Rent', to: '/rent' },
+  { label: 'Sell', to: '/sell' },
+  { label: 'Mortgage', to: '/mortgage' },
+  { label: 'Agents', to: '/agents' },
   { label: 'Dashboard', to: '/dashboard' },
 ]
 
@@ -33,7 +34,7 @@ function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-7">
           {navItems.map((item) => (
             <NavLink
               key={item.label}
