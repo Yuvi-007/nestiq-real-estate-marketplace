@@ -6,6 +6,7 @@ import ProtectedRoute from './components/common/ProtectedRoute'
 import PageLoader from './components/common/PageLoader'
 
 const AdminPanel = lazy(() => import('./pages/AdminPanel/AdminPanel'))
+const AgentProfile = lazy(() => import('./pages/AgentProfile/AgentProfile'))
 const Agents = lazy(() => import('./pages/Agents/Agents'))
 const Buy = lazy(() => import('./pages/Buy/Buy'))
 const CityLanding = lazy(() => import('./pages/CityLanding/CityLanding'))
@@ -35,6 +36,7 @@ function App() {
         <Route path="/sell" element={<RouteBoundary><Sell /></RouteBoundary>} />
         <Route path="/mortgage" element={<RouteBoundary><Mortgage /></RouteBoundary>} />
         <Route path="/agents" element={<RouteBoundary><Agents /></RouteBoundary>} />
+        <Route path="/agents/:agentId" element={<RouteBoundary><AgentProfile /></RouteBoundary>} />
         <Route path="/home-value" element={<RouteBoundary><HomeValue /></RouteBoundary>} />
         <Route path="/city/:citySlug" element={<RouteBoundary><CityLanding /></RouteBoundary>} />
         <Route path="/properties" element={<RouteBoundary><Properties /></RouteBoundary>} />
