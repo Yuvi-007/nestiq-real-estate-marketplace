@@ -3,6 +3,8 @@ import { ArrowRight, LockKeyhole, Mail, Phone, UserRound } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import AuthLayout from '../../components/layout/AuthLayout'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
 import useAuth from '../../hooks/useAuth'
 
 const roles = [
@@ -108,96 +110,64 @@ function Register() {
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {serverError && (
-          <div className="rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
+          <div className="rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
             {serverError}
           </div>
         )}
 
-        <div>
-          <label htmlFor="name" className="mb-2 block text-sm font-bold text-primary">
-            Full name
-          </label>
-          <div className="relative">
-            <UserRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input
-              id="name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              className={`h-12 w-full rounded-lg border bg-white pl-10 pr-4 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15 ${
-                errors.name ? 'border-danger' : 'border-slate-200'
-              }`}
-              placeholder="Your name"
-            />
-          </div>
-          {errors.name && <p className="mt-2 text-sm font-semibold text-danger">{errors.name}</p>}
-        </div>
+        <Input
+          id="name"
+          name="name"
+          label="Full name"
+          icon={UserRound}
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Your name"
+          error={errors.name}
+        />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-bold text-primary">
-              Email
-            </label>
-            <div className="relative">
-              <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                className={`h-12 w-full rounded-lg border bg-white pl-10 pr-4 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15 ${
-                  errors.email ? 'border-danger' : 'border-slate-200'
-                }`}
-                placeholder="you@example.com"
-              />
-            </div>
-            {errors.email && <p className="mt-2 text-sm font-semibold text-danger">{errors.email}</p>}
-          </div>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            label="Email"
+            icon={Mail}
+            value={form.email}
+            onChange={handleChange}
+            placeholder="you@example.com"
+            error={errors.email}
+          />
 
-          <div>
-            <label htmlFor="phone" className="mb-2 block text-sm font-bold text-primary">
-              Phone
-            </label>
-            <div className="relative">
-              <Phone className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input
-                id="phone"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                className="h-12 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-4 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15"
-                placeholder="Optional"
-              />
-            </div>
-          </div>
+          <Input
+            id="phone"
+            name="phone"
+            label="Phone"
+            icon={Phone}
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="Optional"
+          />
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-2 block text-sm font-bold text-primary">
-            Password
-          </label>
-          <div className="relative">
-            <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              className={`h-12 w-full rounded-lg border bg-white pl-10 pr-4 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15 ${
-                errors.password ? 'border-danger' : 'border-slate-200'
-              }`}
-              placeholder="Minimum 6 characters"
-            />
-          </div>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            label="Password"
+            icon={LockKeyhole}
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Minimum 6 characters"
+            error={errors.password}
+          />
           <div className="mt-3 flex items-center gap-3">
             <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
               <div className={`h-full rounded-full ${strength.width} ${strength.color}`} />
             </div>
             <span className="text-xs font-bold text-slate-500">{strength.label}</span>
           </div>
-          {errors.password && <p className="mt-2 text-sm font-semibold text-danger">{errors.password}</p>}
         </div>
 
         <div>
@@ -206,7 +176,7 @@ function Register() {
             {roles.map((role) => (
               <label
                 key={role.value}
-                className={`flex h-11 cursor-pointer items-center justify-center rounded-lg border text-sm font-extrabold transition ${
+                className={`flex h-11 cursor-pointer items-center justify-center rounded-xl border text-sm font-extrabold transition ${
                   form.role === role.value
                     ? 'border-primary bg-primary text-white'
                     : 'border-slate-200 bg-white text-slate-600 hover:border-accent hover:text-primary'
@@ -227,14 +197,16 @@ function Register() {
           {errors.role && <p className="mt-2 text-sm font-semibold text-danger">{errors.role}</p>}
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-extrabold text-white shadow-sm transition hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-70"
+          size="lg"
+          icon={!isLoading ? ArrowRight : undefined}
+          iconPosition="right"
+          className="w-full"
         >
           {isLoading ? 'Creating account...' : 'Create Account'}
-          {!isLoading && <ArrowRight size={18} />}
-        </button>
+        </Button>
 
         <p className="text-center text-sm font-semibold text-slate-500">
           Already have an account?{' '}

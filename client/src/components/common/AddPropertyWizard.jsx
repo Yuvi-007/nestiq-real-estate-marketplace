@@ -6,6 +6,10 @@ import PropertyFormStepBasic from './PropertyFormStepBasic'
 import PropertyFormStepDetails from './PropertyFormStepDetails'
 import PropertyFormStepMedia from './PropertyFormStepMedia'
 import PropertyFormStepPreview from './PropertyFormStepPreview'
+import Button from '../ui/Button'
+import Card from '../ui/Card'
+import Input from '../ui/Input'
+import SectionHeader from '../ui/SectionHeader'
 
 const defaultValues = {
   title: '',
@@ -43,33 +47,43 @@ const listFromText = (value, separator = ',') =>
     .filter(Boolean)
 
 function LocationStep({ register, errors }) {
-  const fieldClass = 'h-12 w-full rounded-lg border border-slate-200 px-4 text-sm font-semibold outline-none focus:border-accent focus:ring-4 focus:ring-accent/15'
-
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-bold text-primary" htmlFor="address">Address</label>
-          <input id="address" {...register('location.address', { required: 'Address is required' })} className={fieldClass} placeholder="Sector 62, Golf Course Extension" />
-          {errors.location?.address?.message && <p className="mt-2 text-sm font-semibold text-danger">{errors.location.address.message}</p>}
-        </div>
-        <div>
-          <label className="mb-2 block text-sm font-bold text-primary" htmlFor="city">City</label>
-          <input id="city" {...register('location.city', { required: 'City is required' })} className={fieldClass} placeholder="Gurugram" />
-          {errors.location?.city?.message && <p className="mt-2 text-sm font-semibold text-danger">{errors.location.city.message}</p>}
-        </div>
+        <Input
+          id="address"
+          label="Address"
+          {...register('location.address', { required: 'Address is required' })}
+          placeholder="Sector 62, Golf Course Extension"
+          error={errors.location?.address?.message}
+        />
+        <Input
+          id="city"
+          label="City"
+          {...register('location.city', { required: 'City is required' })}
+          placeholder="Gurugram"
+          error={errors.location?.city?.message}
+        />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-bold text-primary" htmlFor="lat">Latitude</label>
-          <input id="lat" type="number" step="any" {...register('location.lat', { required: 'Latitude is required' })} className={fieldClass} placeholder="28.4595" />
-          {errors.location?.lat?.message && <p className="mt-2 text-sm font-semibold text-danger">{errors.location.lat.message}</p>}
-        </div>
-        <div>
-          <label className="mb-2 block text-sm font-bold text-primary" htmlFor="lng">Longitude</label>
-          <input id="lng" type="number" step="any" {...register('location.lng', { required: 'Longitude is required' })} className={fieldClass} placeholder="77.0266" />
-          {errors.location?.lng?.message && <p className="mt-2 text-sm font-semibold text-danger">{errors.location.lng.message}</p>}
-        </div>
+        <Input
+          id="lat"
+          type="number"
+          step="any"
+          label="Latitude"
+          {...register('location.lat', { required: 'Latitude is required' })}
+          placeholder="28.4595"
+          error={errors.location?.lat?.message}
+        />
+        <Input
+          id="lng"
+          type="number"
+          step="any"
+          label="Longitude"
+          {...register('location.lng', { required: 'Longitude is required' })}
+          placeholder="77.0266"
+          error={errors.location?.lng?.message}
+        />
       </div>
     </div>
   )
@@ -158,17 +172,14 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
   }
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <Card>
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-accent">Add property</p>
-          <h2 className="mt-2 text-2xl font-extrabold text-primary">Publish a new listing</h2>
-        </div>
+        <SectionHeader eyebrow="Add property" title="Publish a new listing" />
         <div className="flex flex-wrap gap-2">
           {steps.map((label, index) => (
             <span
               key={label}
-              className={`rounded-lg px-3 py-2 text-xs font-extrabold ${
+              className={`rounded-xl px-3 py-2 text-xs font-extrabold ${
                 index === step ? 'bg-primary text-white' : index < step ? 'bg-success/10 text-success' : 'bg-slate-100 text-slate-500'
               }`}
             >
@@ -179,8 +190,8 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
         </div>
       </div>
 
-      {successMessage && <div className="mt-5 rounded-lg border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">{successMessage}</div>}
-      {errorMessage && <div className="mt-5 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">{errorMessage}</div>}
+      {successMessage && <div className="mt-5 rounded-2xl border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">{successMessage}</div>}
+      {errorMessage && <div className="mt-5 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">{errorMessage}</div>}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
         {step === 0 && <PropertyFormStepBasic register={register} errors={errors} />}
@@ -190,38 +201,36 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
         {step === 4 && <PropertyFormStepPreview values={values} />}
 
         <div className="flex flex-wrap justify-between gap-3 border-t border-slate-100 pt-5">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={previousStep}
             disabled={step === 0}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-primary transition hover:border-accent disabled:cursor-not-allowed disabled:opacity-50"
+            icon={ChevronLeft}
           >
-            <ChevronLeft size={17} />
             Back
-          </button>
+          </Button>
 
           {step < steps.length - 1 ? (
-            <button
-              type="button"
+            <Button
               onClick={nextStep}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-extrabold text-white transition hover:bg-charcoal"
+              icon={ChevronRight}
+              iconPosition="right"
             >
               Continue
-              <ChevronRight size={17} />
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-extrabold text-white transition hover:bg-charcoal disabled:cursor-wait disabled:opacity-70"
+              icon={Send}
+              iconPosition="right"
             >
               {isSubmitting ? 'Publishing...' : 'Publish Property'}
-              <Send size={17} />
-            </button>
+            </Button>
           )}
         </div>
       </form>
-    </section>
+    </Card>
   )
 }
 

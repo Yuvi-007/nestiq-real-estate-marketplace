@@ -1,19 +1,23 @@
 import { ShieldCheck, ShieldX, Trash2 } from 'lucide-react'
 
+import Card from '../ui/Card'
+import EmptyState from '../ui/EmptyState'
+import StatusBadge from '../ui/StatusBadge'
+
 const roles = ['buyer', 'seller', 'agent', 'admin']
 
 function AdminUsersTable({ users, currentUserId, onUpdateUser, onDeleteUser, busyUserId }) {
   if (users.length === 0) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
-        <h3 className="text-xl font-extrabold text-primary">No users found</h3>
-        <p className="mt-2 text-sm text-slate-600">Try clearing the role filter or refreshing the table.</p>
-      </div>
+      <EmptyState
+        title="No users found"
+        description="Try clearing the role filter or refreshing the table."
+      />
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <Card padded={false} className="overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50 text-left text-xs font-extrabold uppercase tracking-wide text-slate-500">
@@ -53,13 +57,9 @@ function AdminUsersTable({ users, currentUserId, onUpdateUser, onDeleteUser, bus
                   </td>
                   <td className="px-5 py-4 text-slate-600">{user.phone || '-'}</td>
                   <td className="px-5 py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-extrabold ${
-                        user.isVerified ? 'bg-success/10 text-success' : 'bg-slate-100 text-slate-500'
-                      }`}
-                    >
+                    <StatusBadge status={user.isVerified ? 'approved' : 'sold'} className="normal-case">
                       {user.isVerified ? 'Verified' : 'Unverified'}
-                    </span>
+                    </StatusBadge>
                   </td>
                   <td className="px-5 py-4 text-slate-600">
                     {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}
@@ -94,7 +94,7 @@ function AdminUsersTable({ users, currentUserId, onUpdateUser, onDeleteUser, bus
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   )
 }
 

@@ -5,14 +5,14 @@ import heroImage from '../../assets/hero.png'
 
 function AuthLayout({ children, eyebrow, title, subtitle }) {
   return (
-    <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.10)]">
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.10)]">
       <div className="grid min-h-[720px] lg:grid-cols-[1.05fr_0.95fr]">
         <div className="relative hidden overflow-hidden bg-primary lg:block">
           <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover opacity-75" />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/70 to-accent/50" />
           <div className="relative flex h-full flex-col justify-between p-10 text-white">
             <Link to="/" className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/15 backdrop-blur">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 backdrop-blur">
                 <Building2 size={22} />
               </span>
               <span>
@@ -22,7 +22,7 @@ function AuthLayout({ children, eyebrow, title, subtitle }) {
             </Link>
 
             <div className="max-w-lg">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-sm font-bold text-white backdrop-blur">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-xl bg-white/15 px-3 py-2 text-sm font-bold text-white backdrop-blur">
                 <Sparkles size={16} />
                 Verified property intelligence
               </div>
@@ -36,7 +36,7 @@ function AuthLayout({ children, eyebrow, title, subtitle }) {
 
             <div className="grid grid-cols-3 gap-3 text-sm">
               {['Encrypted sessions', 'Verified roles', 'Smart matching'].map((item) => (
-                <div key={item} className="flex items-center gap-2 rounded-lg bg-white/12 px-3 py-3 backdrop-blur">
+                <div key={item} className="flex items-center gap-2 rounded-xl bg-white/12 px-3 py-3 backdrop-blur">
                   <ShieldCheck size={16} />
                   <span className="font-semibold">{item}</span>
                 </div>
@@ -49,7 +49,7 @@ function AuthLayout({ children, eyebrow, title, subtitle }) {
           <div className="w-full max-w-md">
             <div className="mb-8 lg:hidden">
               <Link to="/" className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white">
                   <Building2 size={21} />
                 </span>
                 <span className="text-lg font-extrabold text-primary">NestIQ</span>

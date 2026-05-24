@@ -10,16 +10,18 @@ import {
   YAxis,
 } from 'recharts'
 
+import Card from '../ui/Card'
+
 const chartColors = ['#0F172A', '#F59E0B', '#10B981', '#F43F5E', '#64748B', '#38BDF8']
 
 function EmptyChart({ title }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <Card>
       <h3 className="text-lg font-extrabold text-primary">{title}</h3>
-      <div className="mt-4 flex h-64 items-center justify-center rounded-lg bg-slate-50 text-sm font-semibold text-slate-500">
+      <div className="mt-4 flex h-64 items-center justify-center rounded-2xl bg-slate-50 text-sm font-semibold text-slate-500">
         No chart data yet
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -29,7 +31,7 @@ function DonutChart({ title, data }) {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <Card>
       <h3 className="text-lg font-extrabold text-primary">{title}</h3>
       <div className="mt-4 h-64">
         <ResponsiveContainer width="100%" height="100%">
@@ -54,7 +56,7 @@ function DonutChart({ title, data }) {
           </span>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -64,7 +66,7 @@ function StatusChart({ data }) {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+    <Card className="lg:col-span-2">
       <h3 className="text-lg font-extrabold text-primary">Listing Status</h3>
       <div className="mt-4 h-64">
         <ResponsiveContainer width="100%" height="100%">
@@ -80,7 +82,7 @@ function StatusChart({ data }) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </Card>
   )
 }
 

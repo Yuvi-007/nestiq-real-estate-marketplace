@@ -7,19 +7,25 @@ import useInquiries from '../../hooks/useInquiries'
 import useSavedProperties from '../../hooks/useSavedProperties'
 import useVisits from '../../hooks/useVisits'
 import { formatPrice } from '../../utils/formatPrice'
+import Button from '../../components/ui/Button'
+import Card from '../../components/ui/Card'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
+import SectionHeader from '../../components/ui/SectionHeader'
+import SystemStatusBadge from '../../components/ui/StatusBadge'
 
 const fallbackImage =
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80'
 
 function DashboardStat({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-white">
+    <Card>
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white">
         <Icon size={20} />
       </span>
       <p className="mt-4 text-3xl font-extrabold text-primary">{value}</p>
       <p className="mt-1 text-sm font-bold text-slate-500">{label}</p>
-    </div>
+    </Card>
   )
 }
 
@@ -29,7 +35,7 @@ function SavedPropertyCard({ property, onRemove, isRemoving }) {
   const address = property.location?.address || 'Address unavailable'
 
   return (
-    <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <Link to={`/properties/${property._id}`} className="block aspect-[4/3] overflow-hidden bg-slate-100">
         <img src={image} alt={property.title} className="h-full w-full object-cover transition duration-700 hover:scale-110" />
       </Link>
@@ -47,7 +53,7 @@ function SavedPropertyCard({ property, onRemove, isRemoving }) {
             type="button"
             onClick={() => onRemove(property._id)}
             disabled={isRemoving}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-danger hover:text-danger disabled:cursor-wait disabled:opacity-60"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-danger hover:text-danger disabled:cursor-wait disabled:opacity-60"
             aria-label="Remove saved property"
           >
             <Trash2 size={17} />
@@ -67,55 +73,43 @@ function SavedPropertyCard({ property, onRemove, isRemoving }) {
             <p className="text-xs font-bold uppercase text-muted">Agent</p>
             <p className="mt-1 text-sm font-bold text-primary">{property.agent?.name || 'NestIQ agent'}</p>
           </div>
-          <Link
+          <Button
+            as={Link}
             to={`/properties/${property._id}`}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-extrabold text-white transition hover:bg-charcoal"
+            size="sm"
           >
             View
-          </Link>
+          </Button>
         </div>
       </div>
     </article>
   )
 }
 
-const statusStyles = {
-  new: 'bg-accent/10 text-accent',
-  contacted: 'bg-success/10 text-success',
-  closed: 'bg-slate-100 text-slate-600',
-  scheduled: 'bg-accent/10 text-accent',
-  completed: 'bg-success/10 text-success',
-  cancelled: 'bg-danger/10 text-danger',
-}
-
 function StatusBadge({ status }) {
-  return (
-    <span className={`rounded-full px-3 py-1 text-xs font-extrabold ${statusStyles[status] || 'bg-slate-100 text-slate-600'}`}>
-      {status}
-    </span>
-  )
+  return <SystemStatusBadge status={status} />
 }
 
 function EmptyPanel({ icon: Icon, title, description }) {
   return (
-    <div className="rounded-lg border border-dashed border-slate-300 bg-white p-5">
-      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+    <Card className="border-dashed border-slate-300">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
         <Icon size={19} />
       </span>
       <h3 className="mt-4 text-lg font-extrabold text-primary">{title}</h3>
       <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
-    </div>
+    </Card>
   )
 }
 
 function InquiryList({ inquiries, isLoading, isError, error }) {
   if (isLoading) {
-    return <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm font-semibold text-slate-600">Loading inquiries...</div>
+    return <Card className="text-sm font-semibold text-slate-600">Loading inquiries...</Card>
   }
 
   if (isError) {
     return (
-      <div className="rounded-lg border border-danger/20 bg-danger/10 p-5 text-sm font-semibold text-danger">
+      <div className="rounded-2xl border border-danger/20 bg-danger/10 p-5 text-sm font-semibold text-danger">
         {error?.response?.data?.message || error?.message || 'Unable to load inquiries'}
       </div>
     )
@@ -134,7 +128,7 @@ function InquiryList({ inquiries, isLoading, isError, error }) {
   return (
     <div className="space-y-3">
       {inquiries.map((inquiry) => (
-        <article key={inquiry._id} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <Card key={inquiry._id}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <Link to={`/properties/${inquiry.property?._id}`} className="font-extrabold text-primary hover:text-accent">
@@ -147,7 +141,7 @@ function InquiryList({ inquiries, isLoading, isError, error }) {
           <p className="mt-3 text-xs font-semibold text-slate-500">
             Sent {inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString() : '-'}
           </p>
-        </article>
+        </Card>
       ))}
     </div>
   )
@@ -155,12 +149,12 @@ function InquiryList({ inquiries, isLoading, isError, error }) {
 
 function VisitList({ visits, isLoading, isError, error, onCancel, cancellingId }) {
   if (isLoading) {
-    return <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm font-semibold text-slate-600">Loading visits...</div>
+    return <Card className="text-sm font-semibold text-slate-600">Loading visits...</Card>
   }
 
   if (isError) {
     return (
-      <div className="rounded-lg border border-danger/20 bg-danger/10 p-5 text-sm font-semibold text-danger">
+      <div className="rounded-2xl border border-danger/20 bg-danger/10 p-5 text-sm font-semibold text-danger">
         {error?.response?.data?.message || error?.message || 'Unable to load visits'}
       </div>
     )
@@ -179,7 +173,7 @@ function VisitList({ visits, isLoading, isError, error, onCancel, cancellingId }
   return (
     <div className="space-y-3">
       {visits.map((visit) => (
-        <article key={visit._id} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <Card key={visit._id}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <Link to={`/properties/${visit.property?._id}`} className="font-extrabold text-primary hover:text-accent">
@@ -192,16 +186,17 @@ function VisitList({ visits, isLoading, isError, error, onCancel, cancellingId }
             <StatusBadge status={visit.status} />
           </div>
           {visit.status !== 'cancelled' && (
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => onCancel(visit._id)}
               disabled={cancellingId === visit._id}
-              className="mt-4 rounded-lg border border-slate-200 px-4 py-2 text-sm font-bold text-primary transition hover:border-danger hover:text-danger disabled:cursor-wait disabled:opacity-60"
+              className="mt-4 hover:border-danger hover:text-danger"
             >
               {cancellingId === visit._id ? 'Cancelling...' : 'Cancel visit'}
-            </button>
+            </Button>
           )}
-        </article>
+        </Card>
       ))}
     </div>
   )
@@ -241,12 +236,13 @@ function Dashboard() {
 
   return (
     <section className="space-y-8">
-      <div className="rounded-lg bg-primary px-6 py-8 text-white shadow-[0_24px_80px_rgba(15,23,42,0.16)]">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Buyer workspace</p>
-        <h1 className="mt-3 font-display text-4xl font-bold">Welcome back, {user?.name || 'NestIQ user'}</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-white/75">
-          Your saved homes, visit planning, and property conversations will live here as the dashboard grows.
-        </p>
+      <div className="rounded-2xl bg-primary px-6 py-8 text-white shadow-[0_24px_80px_rgba(15,23,42,0.16)]">
+        <PageHeader
+          eyebrow="Buyer workspace"
+          title={`Welcome back, ${user?.name || 'NestIQ user'}`}
+          description="Your saved homes, visit planning, and property conversations live in one private workspace."
+          className="[&_h1]:text-white [&_p:last-child]:text-white/75"
+        />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -256,20 +252,16 @@ function Dashboard() {
       </div>
 
       <section className="space-y-5">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-accent">Saved homes</p>
-            <h2 className="mt-2 text-2xl font-extrabold text-primary">Properties you are watching</h2>
-          </div>
-          <Link to="/properties" className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-bold text-primary transition hover:border-accent">
-            Browse more
-          </Link>
-        </div>
+        <SectionHeader
+          eyebrow="Saved homes"
+          title="Properties you are watching"
+          action={<Button as={Link} to="/properties" variant="secondary">Browse more</Button>}
+        />
 
         {savedProperties.length > 0 ? (
           <>
             {removeError && (
-              <div className="rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
+              <div className="rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
                 {removeError}
               </div>
             )}
@@ -285,30 +277,19 @@ function Dashboard() {
             </div>
           </>
         ) : (
-          <div className="rounded-lg border border-slate-200 bg-white px-6 py-14 text-center shadow-sm">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-accent/10 text-accent">
-              <Home size={25} />
-            </span>
-            <h3 className="mt-5 text-2xl font-extrabold text-primary">No saved properties yet</h3>
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-600">
-              Save homes from the marketplace and they will appear here for quick comparison and follow-up.
-            </p>
-            <Link
-              to="/properties"
-              className="mt-6 inline-flex rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-charcoal"
-            >
-              Explore properties
-            </Link>
-          </div>
+          <EmptyState
+            icon={Home}
+            title="No saved properties yet"
+            description="Save homes from the marketplace and they will appear here for quick comparison and follow-up."
+            actionLabel="Explore properties"
+            actionTo="/properties"
+          />
         )}
       </section>
 
       <div className="grid gap-5 md:grid-cols-2">
         <section className="space-y-4">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-accent">Messages</p>
-            <h2 className="mt-2 text-2xl font-extrabold text-primary">My inquiries</h2>
-          </div>
+          <SectionHeader eyebrow="Messages" title="My inquiries" />
           <InquiryList
             inquiries={inquiries}
             isLoading={inquiriesLoading}
@@ -317,10 +298,7 @@ function Dashboard() {
           />
         </section>
         <section className="space-y-4">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-accent">Tours</p>
-            <h2 className="mt-2 text-2xl font-extrabold text-primary">Scheduled visits</h2>
-          </div>
+          <SectionHeader eyebrow="Tours" title="Scheduled visits" />
           <VisitList
             visits={visits}
             isLoading={visitsLoading}

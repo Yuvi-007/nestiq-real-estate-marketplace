@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react'
 
 import { formatPrice } from '../../utils/formatPrice'
+import Card from '../ui/Card'
 
 const fallbackImage =
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80'
@@ -16,7 +17,7 @@ function PropertyFormStepPreview({ values }) {
 
   return (
     <div className="grid gap-5">
-      <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <Card as="article" padded={false} className="overflow-hidden">
         <div className="aspect-[16/9] bg-slate-100">
           <img src={image} alt="" className="h-full w-full object-cover" />
         </div>
@@ -29,7 +30,7 @@ function PropertyFormStepPreview({ values }) {
           </p>
           <p className="mt-4 text-sm leading-6 text-slate-600">{values.description || 'Property description preview.'}</p>
         </div>
-      </article>
+      </Card>
     </div>
   )
 }

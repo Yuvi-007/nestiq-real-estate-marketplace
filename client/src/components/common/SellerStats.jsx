@@ -1,14 +1,16 @@
 import { Eye, Home, MessageCircle, ShieldCheck } from 'lucide-react'
 
+import Card from '../ui/Card'
+
 function StatCard({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-white">
+    <Card>
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white">
         <Icon size={20} />
       </span>
       <p className="mt-4 text-3xl font-extrabold text-primary">{value}</p>
       <p className="mt-1 text-sm font-bold text-slate-500">{label}</p>
-    </div>
+    </Card>
   )
 }
 

@@ -1,21 +1,22 @@
 import { Edit3, Trash2 } from 'lucide-react'
 
 import { formatPrice } from '../../utils/formatPrice'
+import Card from '../ui/Card'
+import EmptyState from '../ui/EmptyState'
+import StatusBadge from '../ui/StatusBadge'
 
 function MyListingsTable({ listings, onDelete, deletingId }) {
   if (listings.length === 0) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
-        <h3 className="text-2xl font-extrabold text-primary">No listings yet</h3>
-        <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-600">
-          Publish your first property from the wizard and it will appear here immediately.
-        </p>
-      </div>
+      <EmptyState
+        title="No listings yet"
+        description="Publish your first property from the wizard and it will appear here immediately."
+      />
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <Card padded={false} className="overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50 text-left text-xs font-extrabold uppercase tracking-wide text-slate-500">
@@ -36,9 +37,7 @@ function MyListingsTable({ listings, onDelete, deletingId }) {
                 <td className="px-5 py-4 text-slate-600">{property.location?.city || '-'}</td>
                 <td className="px-5 py-4 font-bold text-primary">{formatPrice(property.price)}</td>
                 <td className="px-5 py-4">
-                  <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-extrabold text-success">
-                    {property.status || 'active'}
-                  </span>
+                  <StatusBadge status={property.status || 'active'} />
                 </td>
                 <td className="px-5 py-4 text-slate-600">{property.views || 0}</td>
                 <td className="px-5 py-4 text-slate-600">
@@ -70,7 +69,7 @@ function MyListingsTable({ listings, onDelete, deletingId }) {
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   )
 }
 

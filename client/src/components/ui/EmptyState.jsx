@@ -1,8 +1,9 @@
 import Button from './Button'
 import Card from './Card'
+import { Link } from 'react-router-dom'
 
 function EmptyState({ icon: Icon, title, description, actionLabel, onAction, actionTo }) {
-  const actionProps = actionTo ? { as: 'a', href: actionTo } : { onClick: onAction }
+  const actionProps = actionTo ? { as: Link, to: actionTo } : { onClick: onAction }
 
   return (
     <Card className="px-6 py-14 text-center">

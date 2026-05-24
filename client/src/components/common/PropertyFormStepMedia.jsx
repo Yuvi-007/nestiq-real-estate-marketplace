@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useController, useWatch } from 'react-hook-form'
 
 import { uploadService } from '../../services/api'
+import Input from '../ui/Input'
 
 const maxImages = 15
 const maxImageSize = 5 * 1024 * 1024
@@ -82,11 +83,11 @@ function PropertyFormStepMedia({ register, control }) {
       <label
         onDragOver={(event) => event.preventDefault()}
         onDrop={handleDrop}
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-5 py-10 text-center transition ${
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-5 py-10 text-center transition ${
           isUploading ? 'border-accent bg-accent/10' : 'border-slate-200 bg-slate-50 hover:border-accent hover:bg-accent/5'
         }`}
       >
-        <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-white">
+        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white">
           {isUploading ? <UploadCloud className="animate-pulse" size={22} /> : <ImagePlus size={22} />}
         </span>
         <span className="mt-4 text-sm font-extrabold text-primary">
@@ -107,7 +108,7 @@ function PropertyFormStepMedia({ register, control }) {
       </label>
 
       {uploadError && (
-        <div className="rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
+        <div className="rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
           {uploadError}
         </div>
       )}
@@ -115,12 +116,12 @@ function PropertyFormStepMedia({ register, control }) {
       {uploadedImages.length > 0 && (
         <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-4">
           {uploadedImages.map((image) => (
-            <div key={image.publicId} className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+            <div key={image.publicId} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <img src={image.url} alt="Uploaded property" className="aspect-[4/3] w-full object-cover" />
               <button
                 type="button"
                 onClick={() => removeImage(image.publicId)}
-                className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-lg bg-white text-danger shadow-md transition hover:bg-danger hover:text-white"
+                className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-danger shadow-md transition hover:bg-danger hover:text-white"
                 aria-label="Remove uploaded image"
               >
                 <Trash2 size={16} />
@@ -131,14 +132,12 @@ function PropertyFormStepMedia({ register, control }) {
       )}
 
       <div>
-        <label className="mb-2 block text-sm font-bold text-primary" htmlFor="imagesText">
-          Advanced: image URLs
-        </label>
-        <textarea
+        <Input
+          as="textarea"
           id="imagesText"
+          label="Advanced: image URLs"
           {...register('imagesText')}
           rows={5}
-          className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-accent focus:ring-4 focus:ring-accent/15"
           placeholder="Optional fallback: paste one image URL per line"
         />
         <p className="mt-2 text-xs font-semibold text-slate-500">

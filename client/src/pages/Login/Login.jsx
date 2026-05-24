@@ -3,6 +3,9 @@ import { ArrowRight, KeyRound, Mail } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import AuthLayout from '../../components/layout/AuthLayout'
+import Button from '../../components/ui/Button'
+import Card from '../../components/ui/Card'
+import Input from '../../components/ui/Input'
 import useAuth from '../../hooks/useAuth'
 
 const initialForm = {
@@ -88,69 +91,56 @@ function Login() {
     >
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         {serverError && (
-          <div className="rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
+          <div className="rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
             {serverError}
           </div>
         )}
 
-        <div>
-          <label htmlFor="email" className="mb-2 block text-sm font-bold text-primary">
-            Email
-          </label>
-          <div className="relative">
-            <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              className={`h-12 w-full rounded-lg border bg-white pl-10 pr-4 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15 ${
-                errors.email ? 'border-danger' : 'border-slate-200'
-              }`}
-              placeholder="you@example.com"
-            />
-          </div>
-          {errors.email && <p className="mt-2 text-sm font-semibold text-danger">{errors.email}</p>}
-        </div>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          label="Email"
+          icon={Mail}
+          value={form.email}
+          onChange={handleChange}
+          placeholder="you@example.com"
+          error={errors.email}
+        />
 
-        <div>
-          <label htmlFor="password" className="mb-2 block text-sm font-bold text-primary">
-            Password
-          </label>
-          <div className="relative">
-            <KeyRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              className={`h-12 w-full rounded-lg border bg-white pl-10 pr-4 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15 ${
-                errors.password ? 'border-danger' : 'border-slate-200'
-              }`}
-              placeholder="Enter your password"
-            />
-          </div>
-          {errors.password && <p className="mt-2 text-sm font-semibold text-danger">{errors.password}</p>}
-        </div>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          label="Password"
+          icon={KeyRound}
+          value={form.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+          error={errors.password}
+        />
 
-        <button
+        <Card
+          as="button"
+          padded={false}
           type="button"
           onClick={useDemoCredentials}
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:border-accent hover:bg-accent/10 hover:text-primary"
+          className="w-full bg-surface px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:border-accent hover:bg-accent/10 hover:text-primary"
         >
-          Demo credentials: buyer@nestiq.com / Demo@1234
-        </button>
+          <span className="block text-xs font-extrabold uppercase tracking-wide text-accent">Demo helper</span>
+          <span className="mt-1 block">Buyer: buyer@nestiq.com / Demo@1234</span>
+        </Card>
 
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-extrabold text-white shadow-sm transition hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-70"
+          size="lg"
+          icon={!isLoading ? ArrowRight : undefined}
+          iconPosition="right"
+          className="w-full"
         >
           {isLoading ? 'Signing in...' : 'Sign In'}
-          {!isLoading && <ArrowRight size={18} />}
-        </button>
+        </Button>
 
         <p className="text-center text-sm font-semibold text-slate-500">
           New to NestIQ?{' '}

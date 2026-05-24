@@ -1,5 +1,8 @@
 import { AlertTriangle, CameraOff, FileWarning, MapPinned, ShieldCheck, ShieldQuestion } from 'lucide-react'
 
+import Card from '../ui/Card'
+import SectionHeader from '../ui/SectionHeader'
+
 const riskCards = [
   { key: 'highRiskListings', label: 'High-risk listings', icon: AlertTriangle, className: 'bg-red-50 text-red-700' },
   { key: 'mediumRiskListings', label: 'Medium-risk listings', icon: ShieldQuestion, className: 'bg-amber-50 text-amber-700' },
@@ -15,16 +18,12 @@ function AdminRiskOverview({ stats, properties }) {
     .slice(0, 5)
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-accent">Trust intelligence</p>
-          <h2 className="mt-2 text-2xl font-extrabold text-primary">Risk overview</h2>
-        </div>
-        <p className="max-w-xl text-sm leading-6 text-slate-600">
-          Transparent rule-based quality checks for moderation, fraud review, and listing cleanup.
-        </p>
-      </div>
+    <Card>
+      <SectionHeader
+        eyebrow="Trust intelligence"
+        title="Risk overview"
+        description="Transparent rule-based quality checks for moderation, fraud review, and listing cleanup."
+      />
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
         {riskCards.map(({ key, label, icon: Icon, className }) => (
@@ -67,7 +66,7 @@ function AdminRiskOverview({ stats, properties }) {
           </div>
         )}
       </div>
-    </section>
+    </Card>
   )
 }
 
