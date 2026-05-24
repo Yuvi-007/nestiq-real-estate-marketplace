@@ -1,13 +1,15 @@
 import { RefreshCw, ShieldAlert } from 'lucide-react'
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import AdminCharts from '../../components/common/AdminCharts'
 import AdminListingsTable from '../../components/common/AdminListingsTable'
 import AdminStats from '../../components/common/AdminStats'
 import AdminUsersTable from '../../components/common/AdminUsersTable'
+import PageLoader from '../../components/common/PageLoader'
 import useAdmin from '../../hooks/useAdmin'
 import useAuth from '../../hooks/useAuth'
+
+const AdminCharts = lazy(() => import('../../components/common/AdminCharts'))
 
 function AdminPanel() {
   const { user } = useAuth()
@@ -114,7 +116,17 @@ function AdminPanel() {
       {!isLoading && !isError && (
         <>
           <AdminStats stats={stats} />
-          <AdminCharts stats={stats} />
+          <Suspense
+            fallback={
+              <PageLoader
+                compact
+                title="Loading analytics"
+                message="Preparing the admin charts and breakdowns."
+              />
+            }
+          >
+            <AdminCharts stats={stats} />
+          </Suspense>
 
           <section className="space-y-5">
             <div className="flex flex-wrap items-end justify-between gap-4">

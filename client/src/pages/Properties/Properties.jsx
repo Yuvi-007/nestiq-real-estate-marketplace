@@ -1,16 +1,16 @@
-import { useMemo, useState } from 'react'
+import { lazy, Suspense, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SlidersHorizontal } from 'lucide-react'
 
 import ActiveFilterChips from '../../components/common/ActiveFilterChips'
 import CompareBar from '../../components/common/CompareBar'
 import FilterSidebar from '../../components/common/FilterSidebar'
-import MapView from '../../components/common/MapView'
 import MobileFilterDrawer from '../../components/common/MobileFilterDrawer'
 import PropertyCard from '../../components/common/PropertyCard'
 import PropertySearchHeader from '../../components/common/PropertySearchHeader'
 import QuickViewModal from '../../components/common/QuickViewModal'
 import RecentlyViewed from '../../components/common/RecentlyViewed'
+import PageLoader from '../../components/common/PageLoader'
 import ResultsToolbar from '../../components/common/ResultsToolbar'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import { useProperties } from '../../hooks/useProperties'
@@ -28,6 +28,8 @@ const initialFilters = {
   furnishing: [],
   verifiedOnly: false,
 }
+
+const MapView = lazy(() => import('../../components/common/MapView'))
 
 const amenityAliases = {
   Pool: ['pool', 'swimming pool', 'private pool'],
@@ -309,7 +311,18 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
             onClear={clearFilters}
             className="hidden lg:block lg:sticky lg:top-24 lg:self-start"
           />
-          <MapView properties={properties} className="h-[72vh]" />
+          <Suspense
+            fallback={
+              <PageLoader
+                compact
+                className="h-[72vh]"
+                title="Loading map view"
+                message="Preparing the map tiles and property markers."
+              />
+            }
+          >
+            <MapView properties={properties} className="h-[72vh]" />
+          </Suspense>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">

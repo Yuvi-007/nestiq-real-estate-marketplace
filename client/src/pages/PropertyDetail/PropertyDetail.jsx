@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CalendarDays, ChevronDown, ChevronUp, Heart, MapPin, MessageCircle } from 'lucide-react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -8,10 +8,10 @@ import AmenitiesGrid from '../../components/common/AmenitiesGrid'
 import ContactAgentModal from '../../components/common/ContactAgentModal'
 import EMICalculator from '../../components/common/EMICalculator'
 import ImageGallery from '../../components/common/ImageGallery'
-import PriceHistoryChart from '../../components/common/PriceHistoryChart'
 import PropertyHighlights from '../../components/common/PropertyHighlights'
 import ScheduleVisitModal from '../../components/common/ScheduleVisitModal'
 import SimilarProperties from '../../components/common/SimilarProperties'
+import PageLoader from '../../components/common/PageLoader'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import useAuth from '../../hooks/useAuth'
 import useInquiries from '../../hooks/useInquiries'
@@ -21,6 +21,8 @@ import useVisits from '../../hooks/useVisits'
 import { propertyService } from '../../services/api'
 import { formatPrice } from '../../utils/formatPrice'
 import { saveRecentlyViewed } from '../../utils/recentlyViewed'
+
+const PriceHistoryChart = lazy(() => import('../../components/common/PriceHistoryChart'))
 
 const badgeStyles = {
   New: 'bg-success/10 text-success',
@@ -236,7 +238,17 @@ function PropertyDetail() {
           </section>
 
           <AmenitiesGrid amenities={property.amenities} />
-          <PriceHistoryChart price={property.price} />
+          <Suspense
+            fallback={
+              <PageLoader
+                compact
+                title="Loading price history"
+                message="Preparing the price trend chart for this property."
+              />
+            }
+          >
+            <PriceHistoryChart price={property.price} />
+          </Suspense>
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
