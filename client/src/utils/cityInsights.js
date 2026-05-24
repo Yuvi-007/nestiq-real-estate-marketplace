@@ -1,0 +1,135 @@
+const cityInsights = {
+  Mumbai: {
+    schools: ['Dhirubhai Ambani International School', 'Bombay Scottish School', 'Jamnabai Narsee School'],
+    hospitals: ['Lilavati Hospital', 'Kokilaben Dhirubhai Ambani Hospital', 'Hiranandani Hospital'],
+    malls: ['Phoenix Palladium', 'R City Mall', 'Oberoi Mall'],
+    transit: ['Mumbai Metro', 'Western Railway', 'Bandra-Worli Sea Link'],
+    lifestyleScore: 9,
+    connectivityScore: 9,
+    familyScore: 8,
+    investmentScore: 9,
+    shortSummary: 'Strong lifestyle access, dense transit options, and deep resale demand across established micro-markets.',
+  },
+  Pune: {
+    schools: ['The Bishop School', 'Delhi Public School Pune', 'Symbiosis International School'],
+    hospitals: ['Ruby Hall Clinic', 'Jehangir Hospital', 'Sahyadri Hospital'],
+    malls: ['Phoenix Marketcity', 'Amanora Mall', 'Seasons Mall'],
+    transit: ['Pune Metro', 'Mumbai-Pune Expressway', 'Pune Railway Station'],
+    lifestyleScore: 8,
+    connectivityScore: 8,
+    familyScore: 9,
+    investmentScore: 8,
+    shortSummary: 'Balanced family living with strong IT corridors, education access, and improving metro connectivity.',
+  },
+  Delhi: {
+    schools: ['Delhi Public School RK Puram', 'Modern School', 'Springdales School'],
+    hospitals: ['AIIMS Delhi', 'Max Super Speciality Hospital', 'Fortis Escorts Heart Institute'],
+    malls: ['Select Citywalk', 'DLF Avenue Saket', 'Pacific Mall'],
+    transit: ['Delhi Metro', 'Ring Road', 'New Delhi Railway Station'],
+    lifestyleScore: 8,
+    connectivityScore: 9,
+    familyScore: 8,
+    investmentScore: 8,
+    shortSummary: 'High connectivity and mature civic infrastructure with varied lifestyle pockets across the city.',
+  },
+  Bangalore: {
+    schools: ['National Public School', 'Inventure Academy', 'Bishop Cotton Boys School'],
+    hospitals: ['Manipal Hospital', 'Aster CMI Hospital', 'Narayana Health City'],
+    malls: ['Phoenix Marketcity', 'Orion Mall', 'Forum South Bengaluru'],
+    transit: ['Namma Metro', 'Outer Ring Road', 'Kempegowda International Airport'],
+    lifestyleScore: 8,
+    connectivityScore: 7,
+    familyScore: 8,
+    investmentScore: 9,
+    shortSummary: 'Strong technology employment base and rental demand, with location choice heavily driven by commute time.',
+  },
+  Hyderabad: {
+    schools: ['Hyderabad Public School', 'Oakridge International School', 'Chirec International School'],
+    hospitals: ['Apollo Hospitals Jubilee Hills', 'Yashoda Hospitals', 'Continental Hospitals'],
+    malls: ['Inorbit Mall', 'Sarath City Capital Mall', 'GVK One Mall'],
+    transit: ['Hyderabad Metro', 'Outer Ring Road', 'Rajiv Gandhi International Airport'],
+    lifestyleScore: 8,
+    connectivityScore: 8,
+    familyScore: 8,
+    investmentScore: 9,
+    shortSummary: 'High-growth real estate market with strong IT employment, planned infrastructure, and family-friendly communities.',
+  },
+  Chennai: {
+    schools: ['PSBB School', 'Chettinad Vidyashram', 'Sishya School'],
+    hospitals: ['Apollo Hospitals Greams Road', 'MIOT International', 'Fortis Malar Hospital'],
+    malls: ['Phoenix Marketcity Chennai', 'Express Avenue', 'VR Chennai'],
+    transit: ['Chennai Metro', 'OMR Corridor', 'Chennai Central Railway Station'],
+    lifestyleScore: 8,
+    connectivityScore: 8,
+    familyScore: 9,
+    investmentScore: 8,
+    shortSummary: 'Stable family-oriented market with strong healthcare, education, and employment corridors.',
+  },
+  Kolkata: {
+    schools: ['La Martiniere for Boys', 'Modern High School', 'South Point School'],
+    hospitals: ['AMRI Hospitals', 'Apollo Multispeciality Hospitals', 'Fortis Hospital Anandapur'],
+    malls: ['Quest Mall', 'South City Mall', 'City Centre Salt Lake'],
+    transit: ['Kolkata Metro', 'Howrah Railway Station', 'EM Bypass'],
+    lifestyleScore: 7,
+    connectivityScore: 8,
+    familyScore: 8,
+    investmentScore: 7,
+    shortSummary: 'Established civic access and cultural lifestyle with value-led residential options in many neighborhoods.',
+  },
+  Nashik: {
+    schools: ['Fravashi Academy', 'Wisdom High International School', 'Ryan International School'],
+    hospitals: ['Wockhardt Hospitals', 'Sahyadri Super Speciality Hospital', 'Apollo Hospitals Nashik'],
+    malls: ['City Centre Mall', 'Nashik City Centre', 'Pinnacle Mall'],
+    transit: ['Nashik Road Railway Station', 'Mumbai-Nashik Highway', 'Ozar Airport'],
+    lifestyleScore: 7,
+    connectivityScore: 7,
+    familyScore: 8,
+    investmentScore: 7,
+    shortSummary: 'Calmer lifestyle, improving road access, and value-driven housing options for families and investors.',
+  },
+  Gurgaon: {
+    schools: ['The Shri Ram School', 'DPS Gurgaon', 'Scottish High International School'],
+    hospitals: ['Medanta The Medicity', 'Fortis Memorial Research Institute', 'Artemis Hospital'],
+    malls: ['Ambience Mall', 'MGF Metropolitan Mall', 'DLF Mega Mall'],
+    transit: ['Rapid Metro', 'Dwarka Expressway', 'NH48'],
+    lifestyleScore: 9,
+    connectivityScore: 8,
+    familyScore: 8,
+    investmentScore: 9,
+    shortSummary: 'Premium commercial hub with strong corporate demand, modern housing, and high lifestyle convenience.',
+  },
+  Goa: {
+    schools: ['Sharada Mandir School', 'Sunshine Worldwide School', 'The King School'],
+    hospitals: ['Manipal Hospital Goa', 'Healthway Hospital', 'Goa Medical College'],
+    malls: ['Mall de Goa', 'Caculo Mall', 'Delfino’s Hymart'],
+    transit: ['Dabolim Airport', 'Mopa Airport', 'Madgaon Railway Station'],
+    lifestyleScore: 9,
+    connectivityScore: 7,
+    familyScore: 7,
+    investmentScore: 8,
+    shortSummary: 'Lifestyle-led market with tourism, second-home demand, and strong appeal for premium leisure properties.',
+  },
+}
+
+const fallbackInsight = {
+  schools: ['City public schools', 'Private international schools', 'Neighborhood learning centers'],
+  hospitals: ['Multispeciality hospitals', 'Local clinics', 'Emergency care centers'],
+  malls: ['Retail high streets', 'Local shopping centers', 'Daily convenience markets'],
+  transit: ['Main city road access', 'Public transport stops', 'Regional railway or bus connectivity'],
+  lifestyleScore: 7,
+  connectivityScore: 7,
+  familyScore: 7,
+  investmentScore: 7,
+  shortSummary: 'Sample city-level insights are available for this area. Verify exact neighborhood access during site visits.',
+}
+
+const normalizeCity = (city = '') => city.trim().toLowerCase()
+
+export const getCityInsights = (city) => {
+  const normalizedCity = normalizeCity(city)
+  const match = Object.entries(cityInsights).find(([name]) => normalizeCity(name) === normalizedCity)
+
+  return match ? match[1] : fallbackInsight
+}
+
+export default cityInsights

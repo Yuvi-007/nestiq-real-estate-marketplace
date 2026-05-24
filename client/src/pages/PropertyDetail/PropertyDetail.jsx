@@ -7,8 +7,12 @@ import AgentCard from '../../components/common/AgentCard'
 import AmenitiesGrid from '../../components/common/AmenitiesGrid'
 import ContactAgentModal from '../../components/common/ContactAgentModal'
 import EMICalculator from '../../components/common/EMICalculator'
+import FairPriceEstimate from '../../components/common/FairPriceEstimate'
 import ImageGallery from '../../components/common/ImageGallery'
+import LifestyleScorePanel from '../../components/common/LifestyleScorePanel'
+import NearbyPlaces from '../../components/common/NearbyPlaces'
 import PropertyHighlights from '../../components/common/PropertyHighlights'
+import PropertyActivityTimeline from '../../components/common/PropertyActivityTimeline'
 import ScheduleVisitModal from '../../components/common/ScheduleVisitModal'
 import SimilarProperties from '../../components/common/SimilarProperties'
 import TrustScorePanel from '../../components/common/TrustScorePanel'
@@ -25,6 +29,7 @@ import { useProperties } from '../../hooks/useProperties'
 import useSavedProperties from '../../hooks/useSavedProperties'
 import useVisits from '../../hooks/useVisits'
 import { propertyService } from '../../services/api'
+import { getCityInsights } from '../../utils/cityInsights'
 import { formatPrice } from '../../utils/formatPrice'
 import { saveRecentlyViewed } from '../../utils/recentlyViewed'
 
@@ -82,6 +87,7 @@ function PropertyDetail() {
   const isSaved = property ? isPropertySaved(property._id) : false
   const isSaving = property ? savingPropertyId === property._id : false
   const description = property?.description || ''
+  const cityInsights = getCityInsights(property?.location?.city)
   const shouldClampDescription = description.length > 260
   const similarProperties = (propertiesData?.data || [])
     .filter((item) => item._id !== property?._id)
@@ -210,6 +216,8 @@ function PropertyDetail() {
 
           <TrustScorePanel trustScore={property.trustScore} />
 
+          <FairPriceEstimate property={property} />
+
           <Card>
             <h2 className="text-xl font-bold text-primary">Description</h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
@@ -228,6 +236,22 @@ function PropertyDetail() {
           </Card>
 
           <AmenitiesGrid amenities={property.amenities} />
+
+          <section className="space-y-5">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-wide text-accent">Nearby & Lifestyle Insights</p>
+              <h2 className="mt-2 text-2xl font-extrabold text-primary">Neighborhood decision support</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                These are demo/sample city-level insights for hackathon evaluation. Verify exact schools, hospitals, transit,
+                and neighborhood fit during site visits.
+              </p>
+            </div>
+            <LifestyleScorePanel city={property.location?.city} insights={cityInsights} />
+            <NearbyPlaces insights={cityInsights} />
+          </section>
+
+          <PropertyActivityTimeline property={property} />
+
           <Suspense
             fallback={
               <PageLoader
