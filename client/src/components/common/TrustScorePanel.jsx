@@ -1,4 +1,4 @@
-import { AlertTriangle, BadgeCheck, BrainCircuit, CheckCircle2, MapPinned, ShieldCheck, Sparkles } from 'lucide-react'
+import { AlertTriangle, BrainCircuit, CheckCircle2, MapPinned, ShieldCheck, Sparkles } from 'lucide-react'
 
 const riskClasses = {
   LOW: 'bg-emerald-50 text-emerald-700 border-emerald-200',

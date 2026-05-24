@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 
+import DemoTour from '../components/common/DemoTour'
 import Footer from '../components/common/Footer'
 import MobileBottomNav from '../components/common/MobileBottomNav'
 import Navbar from '../components/common/Navbar'
@@ -21,6 +22,7 @@ function MainLayout() {
         <Outlet />
       </main>
       <Footer />
+      <DemoTour />
       <MobileBottomNav />
     </div>
   )

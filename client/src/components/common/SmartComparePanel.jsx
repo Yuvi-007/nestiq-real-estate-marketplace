@@ -26,7 +26,7 @@ const insightConfig = [
     label: 'Best value',
     icon: TrendingDown,
     pick: (properties) => [...properties].sort((a, b) => getPricePerSqft(a) - getPricePerSqft(b))[0],
-    explain: (property) => `Lowest price per sqft among selected listings.`,
+    explain: () => `Lowest price per sqft among selected listings.`,
   },
   {
     label: 'Best location confidence',
