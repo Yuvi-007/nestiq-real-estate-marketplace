@@ -5,6 +5,7 @@ import CityMarquee from '../../components/common/CityMarquee'
 import FeaturedListings from '../../components/common/FeaturedListings'
 import HowItWorks from '../../components/common/HowItWorks'
 import NeighborhoodSpotlight from '../../components/common/NeighborhoodSpotlight'
+import PopularSearches from '../../components/common/PopularSearches'
 import SearchBar from '../../components/common/SearchBar'
 import StatsSection from '../../components/common/StatsSection'
 import Testimonials from '../../components/common/Testimonials'
@@ -48,9 +49,10 @@ function Home() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="mt-10 max-w-5xl"
+            className="mt-10 max-w-5xl space-y-4"
           >
             <SearchBar />
+            <PopularSearches compact />
           </motion.div>
         </div>
       </section>

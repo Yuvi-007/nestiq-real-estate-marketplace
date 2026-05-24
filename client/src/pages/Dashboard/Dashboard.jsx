@@ -7,6 +7,7 @@ import useInquiries from '../../hooks/useInquiries'
 import useSavedProperties from '../../hooks/useSavedProperties'
 import useVisits from '../../hooks/useVisits'
 import { formatPrice } from '../../utils/formatPrice'
+import SavedSearchesPanel from '../../components/common/SavedSearchesPanel'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import EmptyState from '../../components/ui/EmptyState'
@@ -286,6 +287,8 @@ function Dashboard() {
           />
         )}
       </section>
+
+      <SavedSearchesPanel />
 
       <div className="grid gap-5 md:grid-cols-2">
         <section className="space-y-4">

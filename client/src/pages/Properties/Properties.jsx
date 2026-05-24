@@ -8,10 +8,12 @@ import FilterSidebar from '../../components/common/FilterSidebar'
 import MobileFilterDrawer from '../../components/common/MobileFilterDrawer'
 import PropertyCard from '../../components/common/PropertyCard'
 import PropertySearchHeader from '../../components/common/PropertySearchHeader'
+import PopularSearches from '../../components/common/PopularSearches'
 import QuickViewModal from '../../components/common/QuickViewModal'
 import RecentlyViewed from '../../components/common/RecentlyViewed'
 import PageLoader from '../../components/common/PageLoader'
 import ResultsToolbar from '../../components/common/ResultsToolbar'
+import SavedSearchButton from '../../components/common/SavedSearchButton'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
 import PageHeader from '../../components/ui/PageHeader'
@@ -138,6 +140,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
     [data?.data, appliedFilters],
   )
   const comparedIds = compareProperties.map((property) => property._id)
+  const appliedSearchParams = useMemo(() => filtersToSearchParams(appliedFilters), [appliedFilters])
 
   const updateUrlAndApply = (nextFilters) => {
     setDraftFilters(nextFilters)
@@ -274,6 +277,11 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
         />
 
         <PropertySearchHeader filters={draftFilters} onChange={setDraftFilters} onSearch={applyFilters} />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <PopularSearches />
+        <SavedSearchButton filters={appliedFilters} queryParams={appliedSearchParams} />
       </div>
 
       <ResultsToolbar
