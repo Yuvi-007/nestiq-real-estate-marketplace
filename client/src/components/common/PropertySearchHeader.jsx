@@ -1,5 +1,9 @@
 import { Search } from 'lucide-react'
 
+import Button from '../ui/Button'
+import Card from '../ui/Card'
+import Input from '../ui/Input'
+
 const modes = ['buy', 'rent', 'sell']
 const propertyTypes = ['', 'House', 'Apartment', 'Villa', 'Plot', 'PG']
 const priceRanges = [
@@ -33,7 +37,7 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur">
+    <Card className="bg-white/95 shadow-xl backdrop-blur">
       <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-3">
         {modes.map((mode) => (
           <button
@@ -50,26 +54,24 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
       </div>
 
       <div className="grid gap-3 pt-4 lg:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
-        <input
+        <Input
           type="search"
           value={filters.q}
           onChange={(event) => updateFilter('q', event.target.value)}
           placeholder="Search by city, locality, property name..."
-          className="rounded-xl border border-slate-200 bg-surface px-4 py-3 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:bg-white"
           aria-label="Search by city, locality, property name"
         />
-        <input
+        <Input
           type="text"
           value={filters.city}
           onChange={(event) => updateFilter('city', event.target.value)}
           placeholder="City or location"
-          className="rounded-xl border border-slate-200 bg-surface px-4 py-3 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:bg-white"
           aria-label="City or location"
         />
-        <select
+        <Input
+          as="select"
           value={filters.type}
           onChange={(event) => updateFilter('type', event.target.value)}
-          className="rounded-xl border border-slate-200 bg-surface px-4 py-3 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:bg-white"
           aria-label="Property type"
         >
           {propertyTypes.map((type) => (
@@ -77,11 +79,11 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
               {type || 'All property types'}
             </option>
           ))}
-        </select>
-        <select
+        </Input>
+        <Input
+          as="select"
           value={getSelectedRange(filters)}
           onChange={(event) => updatePriceRange(event.target.value)}
-          className="rounded-xl border border-slate-200 bg-surface px-4 py-3 text-sm font-semibold text-primary outline-none transition focus:border-accent focus:bg-white"
           aria-label="Price range"
         >
           {priceRanges.map((range) => (
@@ -90,17 +92,12 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
             </option>
           ))}
           <option value="Custom budget">Custom budget</option>
-        </select>
-        <button
-          type="button"
-          onClick={onSearch}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-extrabold text-primary shadow-sm transition hover:bg-amber-400"
-        >
-          <Search size={18} />
+        </Input>
+        <Button variant="accent" size="lg" icon={Search} onClick={onSearch}>
           Search
-        </button>
+        </Button>
       </div>
-    </section>
+    </Card>
   )
 }
 

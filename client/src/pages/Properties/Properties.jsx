@@ -12,6 +12,9 @@ import QuickViewModal from '../../components/common/QuickViewModal'
 import RecentlyViewed from '../../components/common/RecentlyViewed'
 import PageLoader from '../../components/common/PageLoader'
 import ResultsToolbar from '../../components/common/ResultsToolbar'
+import Button from '../../components/ui/Button'
+import EmptyState from '../../components/ui/EmptyState'
+import PageHeader from '../../components/ui/PageHeader'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import { useProperties } from '../../hooks/useProperties'
 
@@ -214,40 +217,27 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
 
     if (isError) {
       return (
-        <div className="rounded-2xl border border-danger/20 bg-danger/5 px-6 py-10">
+        <div className="rounded-2xl border border-danger/20 bg-danger/5 px-6 py-10 shadow-sm">
           <h2 className="text-2xl font-extrabold text-danger">Unable to load properties</h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700">
             {error?.message || 'Please confirm the backend is running and try again.'}
           </p>
-          <button
-            type="button"
-            onClick={() => refetch()}
-            className="mt-6 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-charcoal"
-          >
+          <Button className="mt-6" onClick={() => refetch()}>
             Retry
-          </button>
+          </Button>
         </div>
       )
     }
 
     if (properties.length === 0) {
       return (
-        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
-            <SlidersHorizontal size={26} />
-          </span>
-          <h2 className="mt-6 text-2xl font-extrabold text-primary">No results match these filters</h2>
-          <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-600">
-            Try clearing filters or widening your location, price, amenity, or furnishing choices.
-          </p>
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="mt-6 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-charcoal"
-          >
-            Clear Filters
-          </button>
-        </div>
+        <EmptyState
+          icon={SlidersHorizontal}
+          title="No results match these filters"
+          description="Try clearing filters or widening your location, price, amenity, or furnishing choices."
+          actionLabel="Clear Filters"
+          onAction={clearFilters}
+        />
       )
     }
 
@@ -277,10 +267,11 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
   return (
     <section className="space-y-6">
       <div className="space-y-5">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-accent">NestIQ marketplace</p>
-          <h1 className="mt-2 font-display text-4xl font-bold text-primary sm:text-5xl">Property Search Results</h1>
-        </div>
+        <PageHeader
+          eyebrow="NestIQ marketplace"
+          title="Property Search Results"
+          description="Browse verified listings, compare smarter, and use transparent trust signals before shortlisting."
+        />
 
         <PropertySearchHeader filters={draftFilters} onChange={setDraftFilters} onSearch={applyFilters} />
       </div>

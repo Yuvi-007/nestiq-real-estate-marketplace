@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CalendarDays, ChevronDown, ChevronUp, Heart, MapPin, MessageCircle } from 'lucide-react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AgentCard from '../../components/common/AgentCard'
 import AmenitiesGrid from '../../components/common/AmenitiesGrid'
@@ -13,6 +13,11 @@ import ScheduleVisitModal from '../../components/common/ScheduleVisitModal'
 import SimilarProperties from '../../components/common/SimilarProperties'
 import TrustScorePanel from '../../components/common/TrustScorePanel'
 import PageLoader from '../../components/common/PageLoader'
+import Badge from '../../components/ui/Badge'
+import Button from '../../components/ui/Button'
+import Card from '../../components/ui/Card'
+import EmptyState from '../../components/ui/EmptyState'
+import StatusBadge from '../../components/ui/StatusBadge'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import useAuth from '../../hooks/useAuth'
 import useInquiries from '../../hooks/useInquiries'
@@ -141,31 +146,21 @@ function PropertyDetail() {
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700">
           {error?.message || 'Please confirm the backend is running and try again.'}
         </p>
-        <button
-          type="button"
-          onClick={() => refetch()}
-          className="mt-6 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-charcoal"
-        >
+        <Button className="mt-6" onClick={() => refetch()}>
           Retry
-        </button>
+        </Button>
       </section>
     )
   }
 
   if (!property) {
     return (
-      <section className="rounded-lg border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
-        <h1 className="text-3xl font-bold text-primary">Property not found</h1>
-        <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-600">
-          This listing may have been removed or the property ID is invalid.
-        </p>
-        <Link
-          to="/properties"
-          className="mt-6 inline-flex rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-charcoal"
-        >
-          Back to properties
-        </Link>
-      </section>
+      <EmptyState
+        title="Property not found"
+        description="This listing may have been removed or the property ID is invalid."
+        actionLabel="Back to properties"
+        actionTo="/properties"
+      />
     )
   }
 
@@ -178,17 +173,11 @@ function PropertyDetail() {
           <div className="space-y-5 border-b border-slate-200 pb-8">
             <div className="flex flex-wrap items-center gap-3">
               {property.badge && (
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-bold ${
-                    badgeStyles[property.badge] || 'bg-primary/10 text-primary'
-                  }`}
-                >
+                <Badge className={badgeStyles[property.badge] || 'bg-primary/10 text-primary'}>
                   {property.badge}
-                </span>
+                </Badge>
               )}
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                {property.status || 'active'}
-              </span>
+              <StatusBadge status={property.status || 'active'} />
             </div>
 
             <div>
@@ -204,17 +193,15 @@ function PropertyDetail() {
 
             <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="text-3xl font-extrabold text-primary">{formatPrice(property.price)}</p>
-              <button
-                type="button"
+              <Button
+                variant="secondary"
                 onClick={handleSaveClick}
                 disabled={isSaving}
-                className={`inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm font-bold transition hover:border-danger hover:text-danger disabled:cursor-wait disabled:opacity-70 ${
-                  isSaved ? 'border-danger text-danger' : 'border-slate-200 text-charcoal'
-                }`}
+                className={`hover:border-danger hover:text-danger ${isSaved ? 'border-danger text-danger' : 'text-charcoal'}`}
               >
                 <Heart size={18} fill={isSaved ? 'currentColor' : 'none'} className={isSaving ? 'animate-pulse' : ''} />
                 {isSaved ? 'Saved' : 'Save'}
-              </button>
+              </Button>
             </div>
             {saveError && <p className="text-sm font-semibold text-danger">{saveError}</p>}
           </div>
@@ -223,7 +210,7 @@ function PropertyDetail() {
 
           <TrustScorePanel trustScore={property.trustScore} />
 
-          <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <Card>
             <h2 className="text-xl font-bold text-primary">Description</h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
               {showFullDescription || !shouldClampDescription ? description : `${description.slice(0, 260)}...`}
@@ -238,7 +225,7 @@ function PropertyDetail() {
                 {showFullDescription ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </button>
             )}
-          </section>
+          </Card>
 
           <AmenitiesGrid amenities={property.amenities} />
           <Suspense
@@ -255,29 +242,28 @@ function PropertyDetail() {
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <Card>
             <p className="text-sm font-semibold text-muted">Listing price</p>
             <p className="mt-1 text-3xl font-extrabold text-primary">{formatPrice(property.price)}</p>
 
             <div className="mt-5 grid gap-3">
-              <button
-                type="button"
+              <Button
+                size="lg"
                 onClick={() => requireLoginOrOpen(setVisitOpen)}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-charcoal"
+                icon={CalendarDays}
               >
-                <CalendarDays size={18} />
                 Schedule Visit
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="secondary"
+                size="lg"
                 onClick={() => requireLoginOrOpen(setContactOpen)}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-5 py-3 text-sm font-bold text-primary transition hover:border-accent"
+                icon={MessageCircle}
               >
-                <MessageCircle size={18} />
                 Contact Agent
-              </button>
+              </Button>
             </div>
-          </section>
+          </Card>
 
           <AgentCard agent={property.agent} />
           <EMICalculator price={property.price} />

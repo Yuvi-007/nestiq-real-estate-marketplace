@@ -1,3 +1,5 @@
+import Button from '../ui/Button'
+import Card from '../ui/Card'
 import SortDropdown from './SortDropdown'
 import ViewToggle from './ViewToggle'
 
@@ -17,7 +19,7 @@ function getSummary(filters) {
 
 function ResultsToolbar({ count, filters, onSortChange, viewMode, onViewChange, onOpenFilters }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+    <Card className="px-4 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-lg font-extrabold text-primary">Showing {count} properties</p>
@@ -25,18 +27,14 @@ function ResultsToolbar({ count, filters, onSortChange, viewMode, onViewChange, 
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={onOpenFilters}
-            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-primary lg:hidden"
-          >
+          <Button variant="secondary" size="sm" onClick={onOpenFilters} className="lg:hidden">
             Filters
-          </button>
+          </Button>
           <SortDropdown value={filters.sort} onChange={onSortChange} />
           <ViewToggle viewMode={viewMode} onChange={onViewChange} />
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 

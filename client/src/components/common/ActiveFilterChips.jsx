@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { formatPrice } from '../../utils/formatPrice'
+import Badge from '../ui/Badge'
 
 const getChips = (filters) => {
   const chips = []
@@ -35,10 +36,12 @@ function ActiveFilterChips({ filters, onRemove, onClear }) {
           key={chip.key}
           type="button"
           onClick={() => onRemove(chip.key)}
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-charcoal shadow-sm transition hover:border-danger hover:text-danger"
+          className="transition hover:-translate-y-0.5"
         >
-          {chip.label}
-          <X size={14} />
+          <Badge className="border border-slate-200 bg-white text-charcoal shadow-sm hover:border-danger hover:text-danger">
+            {chip.label}
+            <X size={14} />
+          </Badge>
         </button>
       ))}
       <button type="button" onClick={onClear} className="text-sm font-extrabold text-accent">

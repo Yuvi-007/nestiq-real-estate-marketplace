@@ -1,5 +1,10 @@
 import { RotateCcw, Search } from 'lucide-react'
 
+import Button from '../ui/Button'
+import Card from '../ui/Card'
+import Input from '../ui/Input'
+import SectionHeader from '../ui/SectionHeader'
+
 const propertyTypes = ['', 'House', 'Apartment', 'Villa', 'Plot', 'PG']
 const bhkOptions = ['1', '2', '3', '4']
 const amenityOptions = ['Pool', 'Gym', 'Parking', 'Security', 'Pet-friendly']
@@ -29,30 +34,22 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
   }
 
   return (
-    <aside className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ${className}`}>
+    <Card as="aside" className={className}>
       <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-accent">Marketplace</p>
-          <h2 className="mt-1 text-xl font-extrabold text-primary">Refine Results</h2>
-        </div>
-        <button
-          type="button"
-          onClick={onClear}
-          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold text-muted transition hover:border-danger hover:text-danger"
-        >
-          <RotateCcw size={15} />
+        <SectionHeader eyebrow="Marketplace" title="Refine Results" className="[&_h2]:text-xl [&_p]:text-xs" />
+        <Button variant="secondary" size="sm" icon={RotateCcw} onClick={onClear} className="text-muted hover:border-danger hover:text-danger">
           Clear
-        </button>
+        </Button>
       </div>
 
       <div className="mt-6 space-y-5">
         <FilterSection title="City">
-          <input
+          <Input
             type="text"
             value={filters.city}
             onChange={(event) => updateFilter('city', event.target.value)}
             placeholder="Goa, Mumbai, Pune"
-            className="w-full rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:bg-white"
+            className="px-3 py-2.5"
           />
         </FilterSection>
 
@@ -75,21 +72,21 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
 
         <FilterSection title="Price Range">
           <div className="grid grid-cols-2 gap-3">
-            <input
+            <Input
               type="number"
               min="0"
               value={filters.minPrice}
               onChange={(event) => updateFilter('minPrice', event.target.value)}
               placeholder="Min"
-              className="w-full rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:bg-white"
+              className="px-3 py-2.5"
             />
-            <input
+            <Input
               type="number"
               min="0"
               value={filters.maxPrice}
               onChange={(event) => updateFilter('maxPrice', event.target.value)}
               placeholder="Max"
-              className="w-full rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:bg-white"
+              className="px-3 py-2.5"
             />
           </div>
         </FilterSection>
@@ -157,16 +154,11 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
           </label>
         </FilterSection>
 
-        <button
-          type="button"
-          onClick={onApply}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-extrabold text-white transition hover:bg-charcoal"
-        >
-          <Search size={17} />
+        <Button size="lg" icon={Search} onClick={onApply} className="w-full">
           Apply Filters
-        </button>
+        </Button>
       </div>
-    </aside>
+    </Card>
   )
 }
 

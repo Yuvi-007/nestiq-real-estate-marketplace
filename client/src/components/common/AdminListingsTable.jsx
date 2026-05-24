@@ -1,13 +1,9 @@
 import { CheckCircle2, CircleDollarSign, Trash2, XCircle } from 'lucide-react'
 
 import { formatPrice } from '../../utils/formatPrice'
-
-const statusClasses = {
-  active: 'bg-success/10 text-success',
-  pending: 'bg-accent/10 text-accent',
-  sold: 'bg-primary/10 text-primary',
-  rejected: 'bg-danger/10 text-danger',
-}
+import Card from '../ui/Card'
+import EmptyState from '../ui/EmptyState'
+import StatusBadge from '../ui/StatusBadge'
 
 function AdminListingsTable({
   properties,
@@ -19,15 +15,15 @@ function AdminListingsTable({
 }) {
   if (properties.length === 0) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
-        <h3 className="text-xl font-extrabold text-primary">No listings found</h3>
-        <p className="mt-2 text-sm text-slate-600">New seller and agent listings will appear here.</p>
-      </div>
+      <EmptyState
+        title="No listings found"
+        description="New seller and agent listings will appear here."
+      />
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <Card padded={false} className="overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50 text-left text-xs font-extrabold uppercase tracking-wide text-slate-500">
@@ -56,13 +52,7 @@ function AdminListingsTable({
                     <span className="text-xs text-slate-500">{property.agent?.email || '-'}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-extrabold ${
-                        statusClasses[property.status] || 'bg-slate-100 text-slate-500'
-                      }`}
-                    >
-                      {property.status || 'pending'}
-                    </span>
+                    <StatusBadge status={property.status || 'pending'} />
                   </td>
                   <td className="px-5 py-4 text-slate-600">{property.views || 0}</td>
                   <td className="px-5 py-4 text-slate-600">
@@ -118,7 +108,7 @@ function AdminListingsTable({
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   )
 }
 

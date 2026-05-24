@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 
 import useSavedProperties from '../../hooks/useSavedProperties'
 import { formatPrice } from '../../utils/formatPrice'
+import Badge from '../ui/Badge'
+import Button from '../ui/Button'
 import TrustScoreBadge from './TrustScoreBadge'
 
 const badgeStyles = {
@@ -108,13 +110,9 @@ function PropertyCard({
           />
         </Link>
         {property.badge && (
-          <span
-            className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-bold ${
-              badgeStyles[property.badge] || 'bg-primary/10 text-primary'
-            }`}
-          >
+          <Badge className={`absolute left-4 top-4 ${badgeStyles[property.badge] || 'bg-primary/10 text-primary'}`}>
             {property.badge}
-          </span>
+          </Badge>
         )}
         <motion.button
           type="button"
@@ -209,37 +207,32 @@ function PropertyCard({
 
           <div className={`mt-auto grid gap-2 ${onQuickView ? 'sm:grid-cols-2' : ''}`}>
             {onQuickView && (
-              <button
-                type="button"
+              <Button
+                variant="secondary"
                 onClick={() => onQuickView(property)}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-extrabold text-primary transition hover:border-accent"
+                icon={Eye}
               >
-                <Eye size={16} />
                 Quick View
-              </button>
+              </Button>
             )}
-            <Link
+            <Button
+              as={Link}
               to={`/properties/${property._id}`}
-              className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-charcoal"
             >
               View Details
-            </Link>
+            </Button>
           </div>
 
           {onToggleCompare && (
-            <button
-              type="button"
+            <Button
+              variant={isCompared ? 'accent' : 'secondary'}
               disabled={!isCompared && isCompareDisabled}
               onClick={() => onToggleCompare(property)}
-              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold transition ${
-                isCompared
-                  ? 'border-accent bg-accent/10 text-primary'
-                  : 'border-slate-200 text-charcoal hover:border-accent'
-              } disabled:cursor-not-allowed disabled:opacity-50`}
+              icon={Scale}
+              className={isCompared ? 'bg-accent/15 hover:bg-accent/20' : 'text-charcoal'}
             >
-              <Scale size={16} />
               {isCompared ? 'Selected to compare' : 'Compare'}
-            </button>
+            </Button>
           )}
         </div>
       </div>
