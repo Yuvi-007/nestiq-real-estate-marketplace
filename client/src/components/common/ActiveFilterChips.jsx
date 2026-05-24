@@ -7,6 +7,7 @@ const getChips = (filters) => {
 
   if (filters.q) chips.push({ key: 'q', label: filters.q })
   if (filters.city) chips.push({ key: 'city', label: filters.city })
+  ;(filters.cityList || []).forEach((city) => chips.push({ key: `cityList:${city}`, label: city }))
   if (filters.type) chips.push({ key: 'type', label: filters.type })
   if (filters.mode) chips.push({ key: 'mode', label: filters.mode.charAt(0).toUpperCase() + filters.mode.slice(1) })
   if (filters.minPrice && !filters.maxPrice) chips.push({ key: 'minPrice', label: `Above ${formatPrice(filters.minPrice)}` })

@@ -48,6 +48,7 @@ export const buildSavedSearchLabel = (filters) => {
 
   if (filters.type) parts.push(filters.type)
   if (filters.bhk) parts.push(`${filters.bhk === '4' ? '4+' : filters.bhk} BHK`)
+  if (filters.cityList?.length) parts.push(`in ${filters.cityList.slice(0, 3).join(', ')}`)
   if (filters.city) parts.push(`in ${filters.city}`)
   if (filters.maxPrice) parts.push(`under Rs. ${Number(filters.maxPrice).toLocaleString('en-IN')}`)
   if (filters.minPrice && !filters.maxPrice) parts.push(`above Rs. ${Number(filters.minPrice).toLocaleString('en-IN')}`)

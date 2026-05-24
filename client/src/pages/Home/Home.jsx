@@ -6,6 +6,7 @@ import FeaturedListings from '../../components/common/FeaturedListings'
 import HowItWorks from '../../components/common/HowItWorks'
 import NeighborhoodSpotlight from '../../components/common/NeighborhoodSpotlight'
 import PopularSearches from '../../components/common/PopularSearches'
+import RecentSearches from '../../components/common/RecentSearches'
 import SearchBar from '../../components/common/SearchBar'
 import StatsSection from '../../components/common/StatsSection'
 import Testimonials from '../../components/common/Testimonials'
@@ -53,6 +54,7 @@ function Home() {
           >
             <SearchBar />
             <PopularSearches compact />
+            <RecentSearches compact />
           </motion.div>
         </div>
       </section>

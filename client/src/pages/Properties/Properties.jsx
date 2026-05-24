@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SlidersHorizontal } from 'lucide-react'
 
@@ -6,23 +6,30 @@ import ActiveFilterChips from '../../components/common/ActiveFilterChips'
 import CompareBar from '../../components/common/CompareBar'
 import FilterSidebar from '../../components/common/FilterSidebar'
 import MobileFilterDrawer from '../../components/common/MobileFilterDrawer'
+import MultiCitySearch from '../../components/common/MultiCitySearch'
+import NearMeButton from '../../components/common/NearMeButton'
 import PropertyCard from '../../components/common/PropertyCard'
 import PropertySearchHeader from '../../components/common/PropertySearchHeader'
 import PopularSearches from '../../components/common/PopularSearches'
+import QuickFilterChips from '../../components/common/QuickFilterChips'
 import QuickViewModal from '../../components/common/QuickViewModal'
+import RecentSearches from '../../components/common/RecentSearches'
 import RecentlyViewed from '../../components/common/RecentlyViewed'
 import PageLoader from '../../components/common/PageLoader'
 import ResultsToolbar from '../../components/common/ResultsToolbar'
 import SavedSearchButton from '../../components/common/SavedSearchButton'
+import SearchIntentBar from '../../components/common/SearchIntentBar'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
 import PageHeader from '../../components/ui/PageHeader'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import { useProperties } from '../../hooks/useProperties'
+import { saveRecentSearch } from '../../utils/recentSearches'
 
 const initialFilters = {
   q: '',
   city: '',
+  cityList: [],
   type: '',
   minPrice: '',
   maxPrice: '',
@@ -53,6 +60,7 @@ const getFiltersFromSearchParams = (searchParams) => ({
   ...initialFilters,
   q: searchParams.get('q') || '',
   city: searchParams.get('city') || '',
+  cityList: getArrayParam(searchParams, 'cityList'),
   type: searchParams.get('type') || '',
   minPrice: searchParams.get('minPrice') || '',
   maxPrice: searchParams.get('maxPrice') || '',
@@ -66,7 +74,7 @@ const getFiltersFromSearchParams = (searchParams) => ({
 
 const getApiParams = (filters) => ({
   q: filters.q,
-  city: filters.city,
+  city: filters.cityList?.length ? '' : filters.city,
   type: filters.type,
   minPrice: filters.minPrice,
   maxPrice: filters.maxPrice,
@@ -116,8 +124,16 @@ const matchesFurnishing = (property, selectedFurnishing) => {
   return selectedFurnishing.some((item) => furnishing.includes(item.toLowerCase()))
 }
 
+const matchesCityList = (property, cityList = []) => {
+  if (!cityList.length) return true
+
+  const propertyCity = (property.location?.city || '').toLowerCase()
+  return cityList.some((city) => propertyCity === city.toLowerCase())
+}
+
 const applyClientFilters = (properties, filters) => {
   return properties.filter((property) => {
+    if (!matchesCityList(property, filters.cityList)) return false
     if (!matchesAmenities(property, filters.amenities)) return false
     if (!matchesFurnishing(property, filters.furnishing)) return false
     if (filters.verifiedOnly && !property.agent) return false
@@ -145,9 +161,12 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
   const appliedSearchParams = useMemo(() => filtersToSearchParams(appliedFilters), [appliedFilters])
 
   const updateUrlAndApply = (nextFilters) => {
+    const nextParams = filtersToSearchParams(nextFilters)
+
     setDraftFilters(nextFilters)
     setAppliedFilters(nextFilters)
-    setSearchParams(filtersToSearchParams(nextFilters))
+    setSearchParams(nextParams)
+    saveRecentSearch({ filters: nextFilters, queryParams: nextParams })
   }
 
   const applyFilters = () => {
@@ -156,6 +175,10 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
 
   const clearFilters = () => {
     updateUrlAndApply(initialFilters)
+  }
+
+  const applyMultiCity = (cityList) => {
+    updateUrlAndApply({ ...appliedFilters, city: cityList.length ? '' : appliedFilters.city, cityList })
   }
 
   const removeFilter = (key) => {
@@ -172,6 +195,9 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
       nextFilters.maxPrice = ''
     } else if (key === 'verifiedOnly') {
       nextFilters.verifiedOnly = false
+    } else if (key.startsWith('cityList:')) {
+      const city = key.split(':')[1]
+      nextFilters.cityList = nextFilters.cityList.filter((item) => item !== city)
     } else {
       nextFilters[key] = key === 'sort' ? 'latest' : ''
     }
@@ -202,6 +228,12 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
   const removeCompare = (propertyId) => {
     setCompareProperties((currentProperties) => currentProperties.filter((property) => property._id !== propertyId))
   }
+
+  useEffect(() => {
+    if (appliedSearchParams.toString()) {
+      saveRecentSearch({ filters: appliedFilters, queryParams: appliedSearchParams })
+    }
+  }, [appliedFilters, appliedSearchParams])
 
   const renderResults = () => {
     if (isLoading) {
@@ -280,11 +312,22 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
           description="Browse verified listings, compare smarter, and use transparent trust signals before shortlisting."
         />
 
+        <SearchIntentBar filters={appliedFilters} onApply={updateUrlAndApply} />
         <PropertySearchHeader filters={draftFilters} onChange={setDraftFilters} onSearch={applyFilters} />
       </div>
 
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+        <QuickFilterChips filters={appliedFilters} onApply={updateUrlAndApply} />
+        <NearMeButton />
+      </div>
+
+      <MultiCitySearch selectedCities={appliedFilters.cityList} onChange={applyMultiCity} />
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <PopularSearches />
+        <div className="grid gap-4">
+          <PopularSearches />
+          <RecentSearches />
+        </div>
         <SavedSearchButton filters={appliedFilters} queryParams={appliedSearchParams} />
       </div>
 

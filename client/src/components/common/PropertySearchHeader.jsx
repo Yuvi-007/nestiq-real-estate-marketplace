@@ -23,6 +23,11 @@ const getSelectedRange = (filters) => {
 
 function PropertySearchHeader({ filters, onChange, onSearch }) {
   const updateFilter = (name, value) => {
+    if (name === 'city') {
+      onChange({ ...filters, city: value, cityList: [] })
+      return
+    }
+
     onChange({ ...filters, [name]: value })
   }
 
