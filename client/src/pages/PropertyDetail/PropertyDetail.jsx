@@ -1,21 +1,27 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { CalendarDays, ChevronDown, ChevronUp, Heart, MapPin, MessageCircle } from 'lucide-react'
+import { CalendarDays, ChevronDown, ChevronUp, Heart, MapPin, MessageCircle, ShieldCheck, Sparkles, UserRound } from 'lucide-react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AgentCard from '../../components/common/AgentCard'
-import AmenitiesGrid from '../../components/common/AmenitiesGrid'
+import AmenitiesByCategory from '../../components/common/AmenitiesByCategory'
 import ContactAgentModal from '../../components/common/ContactAgentModal'
 import EMICalculator from '../../components/common/EMICalculator'
 import FairPriceEstimate from '../../components/common/FairPriceEstimate'
+import FeesPoliciesSection from '../../components/common/FeesPoliciesSection'
+import FloorPlansSection from '../../components/common/FloorPlansSection'
 import ImageGallery from '../../components/common/ImageGallery'
 import LifestyleScorePanel from '../../components/common/LifestyleScorePanel'
+import MobileStickyCTA from '../../components/common/MobileStickyCTA'
 import NearbyPlaces from '../../components/common/NearbyPlaces'
 import PropertyHighlights from '../../components/common/PropertyHighlights'
 import PropertyActivityTimeline from '../../components/common/PropertyActivityTimeline'
+import PropertySectionNav from '../../components/common/PropertySectionNav'
 import ScheduleVisitModal from '../../components/common/ScheduleVisitModal'
+import SharePropertyButton from '../../components/common/SharePropertyButton'
 import SimilarProperties from '../../components/common/SimilarProperties'
 import TrustScorePanel from '../../components/common/TrustScorePanel'
+import UtilitiesInfoCard from '../../components/common/UtilitiesInfoCard'
 import PageLoader from '../../components/common/PageLoader'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
@@ -172,9 +178,15 @@ function PropertyDetail() {
 
   return (
     <section className="space-y-10">
+      <PropertySectionNav />
+
+      <div id="overview" className="scroll-mt-32" />
+
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-8">
-          <ImageGallery images={property.images} title={property.title} />
+          <div id="photos" className="scroll-mt-32">
+            <ImageGallery images={property.images} title={property.title} />
+          </div>
 
           <div className="space-y-5 border-b border-slate-200 pb-8">
             <div className="flex flex-wrap items-center gap-3">
@@ -199,24 +211,31 @@ function PropertyDetail() {
 
             <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="text-3xl font-extrabold text-primary">{formatPrice(property.price)}</p>
-              <Button
-                variant="secondary"
-                onClick={handleSaveClick}
-                disabled={isSaving}
-                className={`hover:border-danger hover:text-danger ${isSaved ? 'border-danger text-danger' : 'text-charcoal'}`}
-              >
-                <Heart size={18} fill={isSaved ? 'currentColor' : 'none'} className={isSaving ? 'animate-pulse' : ''} />
-                {isSaved ? 'Saved' : 'Save'}
-              </Button>
+              <div className="flex flex-wrap gap-3">
+                <SharePropertyButton property={property} />
+                <Button
+                  variant="secondary"
+                  onClick={handleSaveClick}
+                  disabled={isSaving}
+                  className={`hover:border-danger hover:text-danger ${isSaved ? 'border-danger text-danger' : 'text-charcoal'}`}
+                >
+                  <Heart size={18} fill={isSaved ? 'currentColor' : 'none'} className={isSaving ? 'animate-pulse' : ''} />
+                  {isSaved ? 'Saved' : 'Save'}
+                </Button>
+              </div>
             </div>
             {saveError && <p className="text-sm font-semibold text-danger">{saveError}</p>}
           </div>
 
           <PropertyHighlights property={property} />
 
-          <TrustScorePanel trustScore={property.trustScore} />
+          <div id="intelligence" className="scroll-mt-32 space-y-8">
+            <TrustScorePanel trustScore={property.trustScore} />
 
-          <FairPriceEstimate property={property} />
+            <FairPriceEstimate property={property} />
+
+            <FloorPlansSection property={property} />
+          </div>
 
           <Card>
             <h2 className="text-xl font-bold text-primary">Description</h2>
@@ -235,9 +254,12 @@ function PropertyDetail() {
             )}
           </Card>
 
-          <AmenitiesGrid amenities={property.amenities} />
+          <div id="amenities" className="scroll-mt-32 space-y-8">
+            <AmenitiesByCategory amenities={property.amenities} />
+            <UtilitiesInfoCard amenities={property.amenities} />
+          </div>
 
-          <section className="space-y-5">
+          <section id="nearby" className="scroll-mt-32 space-y-5">
             <div>
               <p className="text-sm font-bold uppercase tracking-wide text-accent">Nearby & Lifestyle Insights</p>
               <h2 className="mt-2 text-2xl font-extrabold text-primary">Neighborhood decision support</h2>
@@ -249,6 +271,10 @@ function PropertyDetail() {
             <LifestyleScorePanel city={property.location?.city} insights={cityInsights} />
             <NearbyPlaces insights={cityInsights} />
           </section>
+
+          <div id="fees-policies" className="scroll-mt-32">
+            <FeesPoliciesSection property={property} />
+          </div>
 
           <PropertyActivityTimeline property={property} />
 
@@ -265,10 +291,26 @@ function PropertyDetail() {
           </Suspense>
         </div>
 
-        <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <Card>
+        <aside id="contact" className="scroll-mt-32 space-y-5 lg:sticky lg:top-32 lg:self-start">
+          <Card className="shadow-[0_24px_80px_rgba(15,23,42,0.10)]">
             <p className="text-sm font-semibold text-muted">Listing price</p>
             <p className="mt-1 text-3xl font-extrabold text-primary">{formatPrice(property.price)}</p>
+            <div className="mt-5 flex items-center gap-3 rounded-2xl bg-surface p-4">
+              {property.agent?.avatar ? (
+                <img src={property.agent.avatar} alt={property.agent?.name || 'NestIQ agent'} className="h-12 w-12 rounded-full object-cover" />
+              ) : (
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-muted">
+                  <UserRound size={22} />
+                </span>
+              )}
+              <div>
+                <p className="text-sm font-extrabold text-primary">{property.agent?.name || 'NestIQ agent'}</p>
+                <p className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-success">
+                  <ShieldCheck size={13} />
+                  Verified listing contact
+                </p>
+              </div>
+            </div>
 
             <div className="mt-5 grid gap-3">
               <Button
@@ -286,6 +328,17 @@ function PropertyDetail() {
               >
                 Contact Agent
               </Button>
+            </div>
+
+            <div className="mt-5 grid gap-2 text-sm font-semibold text-slate-600">
+              <p className="flex items-center gap-2">
+                <Sparkles size={16} className="text-accent" />
+                Trust Score and price signals available above
+              </p>
+              <p className="flex items-center gap-2">
+                <ShieldCheck size={16} className="text-success" />
+                Login required before sending inquiries or visits
+              </p>
             </div>
           </Card>
 
@@ -309,6 +362,11 @@ function PropertyDetail() {
         onClose={() => setVisitOpen(false)}
         onSubmit={handleVisitSubmit}
         isSubmitting={createVisit.isPending}
+      />
+      <MobileStickyCTA
+        price={property.price}
+        onContact={() => requireLoginOrOpen(setContactOpen)}
+        onSchedule={() => requireLoginOrOpen(setVisitOpen)}
       />
     </section>
   )
