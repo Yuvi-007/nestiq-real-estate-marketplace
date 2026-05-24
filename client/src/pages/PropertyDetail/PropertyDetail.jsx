@@ -11,6 +11,7 @@ import ImageGallery from '../../components/common/ImageGallery'
 import PropertyHighlights from '../../components/common/PropertyHighlights'
 import ScheduleVisitModal from '../../components/common/ScheduleVisitModal'
 import SimilarProperties from '../../components/common/SimilarProperties'
+import TrustScorePanel from '../../components/common/TrustScorePanel'
 import PageLoader from '../../components/common/PageLoader'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import useAuth from '../../hooks/useAuth'
@@ -219,6 +220,8 @@ function PropertyDetail() {
           </div>
 
           <PropertyHighlights property={property} />
+
+          <TrustScorePanel trustScore={property.trustScore} />
 
           <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-bold text-primary">Description</h2>

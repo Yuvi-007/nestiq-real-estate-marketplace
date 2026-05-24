@@ -3,6 +3,7 @@ import { lazy, Suspense, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import AdminListingsTable from '../../components/common/AdminListingsTable'
+import AdminRiskOverview from '../../components/common/AdminRiskOverview'
 import AdminStats from '../../components/common/AdminStats'
 import AdminUsersTable from '../../components/common/AdminUsersTable'
 import PageLoader from '../../components/common/PageLoader'
@@ -116,6 +117,7 @@ function AdminPanel() {
       {!isLoading && !isError && (
         <>
           <AdminStats stats={stats} />
+          <AdminRiskOverview stats={stats} properties={properties} />
           <Suspense
             fallback={
               <PageLoader

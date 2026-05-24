@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const Property = require('../models/Property')
 const User = require('../models/User')
+const { attachTrustScore } = require('../utils/propertyScoring')
 
-const agentFields = 'name avatar phone email'
+const agentFields = 'name avatar phone email role isVerified'
 
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id)
 
@@ -179,7 +180,7 @@ const getProperties = async (req, res) => {
       total,
       page,
       pages: Math.ceil(total / limit),
-      data: properties,
+      data: properties.map(attachTrustScore),
     })
   } catch (error) {
     console.error('Get properties error:', error)
@@ -201,7 +202,7 @@ const searchProperties = async (req, res) => {
     res.json({
       success: true,
       count: properties.length,
-      data: properties,
+      data: properties.map(attachTrustScore),
     })
   } catch (error) {
     console.error('Search properties error:', error)
@@ -227,7 +228,7 @@ const getPropertyById = async (req, res) => {
 
     res.json({
       success: true,
-      data: property,
+      data: attachTrustScore(property),
     })
   } catch (error) {
     console.error('Get property by ID error:', error)

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const Property = require('../models/Property')
 const User = require('../models/User')
+const { attachTrustScore } = require('../utils/propertyScoring')
 
 const agentFields = 'name email phone avatar role isVerified'
 const allowedRoles = ['buyer', 'seller', 'agent', 'admin']
@@ -21,6 +22,41 @@ const formatBreakdown = (items) =>
     value: item.count,
   }))
 
+const buildRiskOverview = (properties) => {
+  const scoredProperties = properties.map(attachTrustScore)
+
+  return scoredProperties.reduce(
+    (overview, property) => {
+      const trustScore = property.trustScore
+      const descriptionLength = (property.description || '').trim().length
+      const hasCoordinates =
+        property.location?.lat !== undefined &&
+        property.location?.lat !== null &&
+        property.location?.lat !== '' &&
+        property.location?.lng !== undefined &&
+        property.location?.lng !== null &&
+        property.location?.lng !== ''
+
+      if (trustScore.riskLevel === 'HIGH') overview.highRiskListings += 1
+      if (trustScore.riskLevel === 'MEDIUM') overview.mediumRiskListings += 1
+      if (trustScore.riskLevel === 'LOW') overview.lowRiskListings += 1
+      if (!property.images?.length) overview.listingsMissingImages += 1
+      if (!hasCoordinates) overview.listingsMissingCoordinates += 1
+      if (descriptionLength < 80) overview.listingsWithWeakDescriptions += 1
+
+      return overview
+    },
+    {
+      highRiskListings: 0,
+      mediumRiskListings: 0,
+      lowRiskListings: 0,
+      listingsMissingImages: 0,
+      listingsMissingCoordinates: 0,
+      listingsWithWeakDescriptions: 0,
+    },
+  )
+}
+
 const getAdminStats = async (req, res) => {
   try {
     const [
@@ -34,6 +70,7 @@ const getAdminStats = async (req, res) => {
       totalSellers,
       viewsResult,
       recentProperties,
+      allPropertiesForRisk,
       propertyTypeCounts,
       userRoleCounts,
       listingStatusCounts,
@@ -51,6 +88,7 @@ const getAdminStats = async (req, res) => {
         .populate('agent', agentFields)
         .sort({ createdAt: -1 })
         .limit(5),
+      Property.find().populate('agent', agentFields),
       Property.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
       User.aggregate([{ $group: { _id: '$role', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
       Property.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
@@ -68,7 +106,8 @@ const getAdminStats = async (req, res) => {
         totalBuyers,
         totalSellers,
         totalViews: viewsResult[0]?.total || 0,
-        recentProperties,
+        recentProperties: recentProperties.map(attachTrustScore),
+        ...buildRiskOverview(allPropertiesForRisk),
         propertyTypeBreakdown: formatBreakdown(propertyTypeCounts),
         userRoleBreakdown: formatBreakdown(userRoleCounts),
         listingStatusBreakdown: formatBreakdown(listingStatusCounts),
@@ -191,7 +230,7 @@ const getAdminProperties = async (req, res) => {
     res.json({
       success: true,
       count: properties.length,
-      data: properties,
+      data: properties.map(attachTrustScore),
     })
   } catch (error) {
     console.error('Admin properties error:', error.message)
@@ -210,10 +249,12 @@ const updatePropertyStatus = async (propertyId, status, rejectionReason) => {
     updatePayload.rejectionReason = ''
   }
 
-  return Property.findByIdAndUpdate(propertyId, updatePayload, {
+  const property = await Property.findByIdAndUpdate(propertyId, updatePayload, {
     new: true,
     runValidators: true,
   }).populate('agent', agentFields)
+
+  return property ? attachTrustScore(property) : null
 }
 
 const setAdminPropertyApproved = async (req, res) => {

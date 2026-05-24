@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import useSavedProperties from '../../hooks/useSavedProperties'
 import { formatPrice } from '../../utils/formatPrice'
+import TrustScoreBadge from './TrustScoreBadge'
 
 const badgeStyles = {
   New: 'bg-success/10 text-success',
@@ -140,6 +141,10 @@ function PropertyCard({
               </h2>
             </Link>
           </div>
+        </div>
+
+        <div className="mt-3">
+          <TrustScoreBadge trustScore={property.trustScore} compact />
         </div>
 
         <p className="mt-3 text-xs font-bold uppercase tracking-wide text-success">{getRecencyText(property)}</p>
