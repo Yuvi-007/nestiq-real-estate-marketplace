@@ -11,7 +11,6 @@ const roles = [
   { value: 'buyer', label: 'Buyer' },
   { value: 'seller', label: 'Seller' },
   { value: 'agent', label: 'Agent' },
-  { value: 'admin', label: 'Admin' },
 ]
 
 const initialForm = {
@@ -172,7 +171,7 @@ function Register() {
 
         <div>
           <span className="mb-2 block text-sm font-bold text-primary">Role</span>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {roles.map((role) => (
               <label
                 key={role.value}
@@ -195,6 +194,9 @@ function Register() {
             ))}
           </div>
           {errors.role && <p className="mt-2 text-sm font-semibold text-danger">{errors.role}</p>}
+          <p className="mt-2 text-xs font-semibold leading-5 text-slate-500">
+            Admin accounts are created internally for platform moderation.
+          </p>
         </div>
 
         <Button

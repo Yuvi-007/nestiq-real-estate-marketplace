@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const { generateAccessToken, generateTokens } = require('../utils/generateTokens')
 
-const allowedRoles = ['buyer', 'seller', 'agent', 'admin']
+const publicRegistrationRoles = ['buyer', 'seller', 'agent']
 const emailRegex = /^\S+@\S+\.\S+$/
 
 const refreshCookieOptions = {
@@ -38,8 +38,12 @@ const validateRegisterInput = ({ name, email, password, role }) => {
     return 'Password must be at least 6 characters'
   }
 
-  if (role && !allowedRoles.includes(role)) {
-    return 'Role must be buyer, seller, agent, or admin'
+  if (role === 'admin') {
+    return 'Admin accounts cannot be created through public registration.'
+  }
+
+  if (role && !publicRegistrationRoles.includes(role)) {
+    return 'Role must be buyer, seller, or agent'
   }
 
   return null
