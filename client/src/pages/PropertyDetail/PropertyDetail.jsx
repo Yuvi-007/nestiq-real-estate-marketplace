@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AgentCard from '../../components/common/AgentCard'
 import AmenitiesByCategory from '../../components/common/AmenitiesByCategory'
+import AskNestIQ from '../../components/common/AskNestIQ'
 import ContactAgentModal from '../../components/common/ContactAgentModal'
 import EMICalculator from '../../components/common/EMICalculator'
 import FairPriceEstimate from '../../components/common/FairPriceEstimate'
@@ -235,6 +236,8 @@ function PropertyDetail() {
             <TrustScorePanel trustScore={property.trustScore} />
 
             <FairPriceEstimate property={property} />
+
+            <AskNestIQ property={property} lifestyleInsights={cityInsights} />
 
             <FloorPlansSection property={property} />
           </div>
