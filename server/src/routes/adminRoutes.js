@@ -8,6 +8,8 @@ const {
   setAdminPropertyApproved,
   setAdminPropertyRejected,
   setAdminPropertyStatus,
+  setAdminPropertyVerificationApproved,
+  setAdminPropertyVerificationRejected,
   updateAdminUser,
 } = require('../controllers/adminController')
 const authMiddleware = require('../middleware/authMiddleware')
@@ -26,5 +28,7 @@ router.get('/properties', getAdminProperties)
 router.patch('/properties/:id/approve', setAdminPropertyApproved)
 router.patch('/properties/:id/reject', setAdminPropertyRejected)
 router.patch('/properties/:id/status', setAdminPropertyStatus)
+router.patch('/properties/:id/verify', setAdminPropertyVerificationApproved)
+router.patch('/properties/:id/reject-verification', setAdminPropertyVerificationRejected)
 
 module.exports = router

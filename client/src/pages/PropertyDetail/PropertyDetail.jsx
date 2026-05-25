@@ -22,6 +22,7 @@ import SharePropertyButton from '../../components/common/SharePropertyButton'
 import SimilarProperties from '../../components/common/SimilarProperties'
 import TrustScorePanel from '../../components/common/TrustScorePanel'
 import UtilitiesInfoCard from '../../components/common/UtilitiesInfoCard'
+import VerificationStatusBadge from '../../components/common/VerificationStatusBadge'
 import PageLoader from '../../components/common/PageLoader'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
@@ -196,6 +197,7 @@ function PropertyDetail() {
                 </Badge>
               )}
               <StatusBadge status={property.status || 'active'} />
+              <VerificationStatusBadge status={property.verification?.status} />
             </div>
 
             <div>

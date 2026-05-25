@@ -31,6 +31,8 @@ const calculatePropertyScore = (propertyInput) => {
   const riskReasons = []
   const strengths = []
   const warnings = []
+  const verification = property.verification || {}
+  const documentsCount = verification.documents?.length || 0
 
   ;['title', 'description', 'type', 'price', 'area', 'bhk', 'bathrooms'].forEach((field) => {
     if (property[field] === undefined || property[field] === null || property[field] === '') {
@@ -76,7 +78,20 @@ const calculatePropertyScore = (propertyInput) => {
   let agentTrustScore = agent?._id || agent?.name || property.agent ? 7 : 3
   if (agent?.isVerified) agentTrustScore = 10
   if (agent?.role === 'admin') agentTrustScore = Math.max(agentTrustScore, 9)
+  if (verification.status === 'verified') agentTrustScore = Math.min(agentTrustScore + 0.6, 10)
+  if (verification.status === 'rejected') agentTrustScore = Math.max(agentTrustScore - 2, 0)
   agentTrustScore = roundScore(agentTrustScore)
+
+  if (verification.status === 'verified') {
+    strengths.push('Property verification documents approved by admin.')
+  } else if (verification.status === 'rejected') {
+    riskReasons.push('Property verification was rejected')
+    warnings.push(verification.rejectionReason || 'Verification documents were rejected by admin.')
+  } else if (documentsCount > 0) {
+    warnings.push('Verification documents are submitted and awaiting admin review.')
+  } else {
+    warnings.push('Property verification documents are not submitted.')
+  }
 
   if (imagesCount === 0) {
     riskReasons.push('No listing images uploaded')

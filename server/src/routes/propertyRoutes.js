@@ -8,6 +8,7 @@ const {
   updateProperty,
   deleteProperty,
   saveProperty,
+  addVerificationDocuments,
 } = require('../controllers/propertyController')
 const authMiddleware = require('../middleware/authMiddleware')
 const roleGuard = require('../middleware/roleGuard')
@@ -21,5 +22,6 @@ router.post('/', authMiddleware, roleGuard('seller', 'agent', 'admin'), createPr
 router.put('/:id', authMiddleware, roleGuard('seller', 'agent', 'admin'), updateProperty)
 router.delete('/:id', authMiddleware, roleGuard('seller', 'agent', 'admin'), deleteProperty)
 router.post('/:id/save', authMiddleware, saveProperty)
+router.post('/:id/verification-documents', authMiddleware, roleGuard('seller', 'agent', 'admin'), addVerificationDocuments)
 
 module.exports = router

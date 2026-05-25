@@ -5,6 +5,7 @@ import Card from '../ui/Card'
 import EmptyState from '../ui/EmptyState'
 import StatusBadge from '../ui/StatusBadge'
 import { calculateListingQuality, getListingQualityLabel } from '../../utils/listingQuality'
+import VerificationStatusBadge from './VerificationStatusBadge'
 
 function MyListingsTable({ listings, onDelete, deletingId }) {
   if (listings.length === 0) {
@@ -19,13 +20,14 @@ function MyListingsTable({ listings, onDelete, deletingId }) {
   return (
     <Card padded={false} className="overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="min-w-[940px] divide-y divide-slate-200 text-sm">
+        <table className="min-w-[1040px] divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50 text-left text-xs font-extrabold uppercase tracking-wide text-slate-500">
             <tr>
               <th className="px-5 py-4">Title</th>
               <th className="px-5 py-4">City</th>
               <th className="px-5 py-4">Price</th>
               <th className="px-5 py-4">Quality</th>
+              <th className="px-5 py-4">Verification</th>
               <th className="px-5 py-4">Status</th>
               <th className="px-5 py-4">Views</th>
               <th className="px-5 py-4">Created</th>
@@ -62,6 +64,9 @@ function MyListingsTable({ listings, onDelete, deletingId }) {
                         <div className="h-full rounded-full bg-accent" style={{ width: `${quality.completionScore}%` }} />
                       </div>
                     </div>
+                  </td>
+                  <td className="px-5 py-4">
+                    <VerificationStatusBadge status={property.verification?.status} />
                   </td>
                   <td className="px-5 py-4">
                     <StatusBadge status={property.status || 'active'} />

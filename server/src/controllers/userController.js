@@ -16,6 +16,21 @@ const cleanUser = (user) => {
   return userObject
 }
 
+const sanitizeSavedProperty = (property) => {
+  const propertyObject = property?.toObject ? property.toObject() : { ...property }
+  const verification = propertyObject.verification || {}
+
+  return {
+    ...propertyObject,
+    verification: {
+      status: verification.status || 'notSubmitted',
+      verifiedAt: verification.verifiedAt,
+      rejectionReason: verification.status === 'rejected' ? verification.rejectionReason : '',
+      documentsCount: verification.documents?.length || 0,
+    },
+  }
+}
+
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password').populate(savedPropertiesPopulate)
@@ -24,9 +39,12 @@ const getProfile = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
+    const userObject = cleanUser(user)
+    userObject.savedProperties = (userObject.savedProperties || []).map(sanitizeSavedProperty)
+
     res.json({
       success: true,
-      data: cleanUser(user),
+      data: userObject,
     })
   } catch (error) {
     console.error('Get profile error:', error.message)
@@ -45,7 +63,7 @@ const getSavedProperties = async (req, res) => {
     res.json({
       success: true,
       count: user.savedProperties.length,
-      data: user.savedProperties,
+      data: user.savedProperties.map(sanitizeSavedProperty),
     })
   } catch (error) {
     console.error('Get saved properties error:', error.message)

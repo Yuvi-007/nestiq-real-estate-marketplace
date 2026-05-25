@@ -6,6 +6,7 @@ import PropertyFormStepBasic from './PropertyFormStepBasic'
 import PropertyFormStepDetails from './PropertyFormStepDetails'
 import PropertyFormStepMedia from './PropertyFormStepMedia'
 import PropertyFormStepPreview from './PropertyFormStepPreview'
+import PropertyVerificationStep from './PropertyVerificationStep'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 import Input from '../ui/Input'
@@ -33,9 +34,10 @@ const defaultValues = {
   amenitiesText: '',
   imagesText: '',
   uploadedImages: [],
+  verificationDocuments: [],
 }
 
-const steps = ['Basic Info', 'Location', 'Details', 'Media', 'Preview']
+const steps = ['Basic Info', 'Location', 'Details', 'Media', 'Verification', 'Preview']
 
 const numberOrUndefined = (value) => {
   if (value === '' || value === undefined || value === null) return undefined
@@ -103,14 +105,19 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
     reset,
     control,
     formState: { errors },
-  } = useForm({ defaultValues })
+  } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  })
 
-  const values = useWatch({ control })
+  const values = useWatch({ control, defaultValue: defaultValues }) || defaultValues
   const stepFields = useMemo(
     () => [
       ['title', 'description', 'type', 'price'],
       ['location.address', 'location.city', 'location.lat', 'location.lng'],
       ['bhk', 'bathrooms', 'area'],
+      [],
       [],
       [],
     ],
@@ -149,6 +156,15 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
       ...(formValues.uploadedImages || []).map((image) => image.url),
       ...listFromText(formValues.imagesText, '\n'),
     ],
+    verification: {
+      documents: (formValues.verificationDocuments || []).map((document) => ({
+        type: document.type,
+        url: document.url,
+        publicId: document.publicId,
+        status: 'submitted',
+      })),
+      status: formValues.verificationDocuments?.length ? 'submitted' : 'notSubmitted',
+    },
     status: 'active',
   })
 
@@ -210,9 +226,10 @@ function AddPropertyWizard({ onCreate, isSubmitting }) {
             {step === 1 && <LocationStep register={register} errors={errors} />}
             {step === 2 && <PropertyFormStepDetails register={register} errors={errors} />}
             {step === 3 && <PropertyFormStepMedia register={register} control={control} />}
-            {step === 4 && <PropertyFormStepPreview values={values} />}
+            {step === 4 && <PropertyVerificationStep control={control} />}
+            {step === 5 && <PropertyFormStepPreview values={values} />}
           </div>
-          {step !== 4 && (
+          {step !== 5 && (
             <aside className="xl:sticky xl:top-24 xl:self-start">
               <ListingQualityChecklist data={values} compact />
             </aside>

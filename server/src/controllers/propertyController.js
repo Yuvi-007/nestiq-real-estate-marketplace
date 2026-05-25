@@ -4,6 +4,7 @@ const User = require('../models/User')
 const { attachTrustScore } = require('../utils/propertyScoring')
 
 const agentFields = 'name avatar phone email role isVerified'
+const allowedDocumentTypes = ['ownership', 'taxReceipt', 'idProof', 'utilityBill', 'other']
 
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id)
 
@@ -153,10 +154,26 @@ const buildPropertyPayload = (body, agentId) => ({
   status: body.status || 'active',
   badge: body.badge,
   agent: agentId,
+  verification: body.verification,
 })
 
 const canManageProperty = (user, property) =>
   user.role === 'admin' || property.agent.toString() === user._id.toString()
+
+const sanitizePublicProperty = (property) => {
+  const scoredProperty = attachTrustScore(property)
+  const verification = scoredProperty.verification || {}
+
+  return {
+    ...scoredProperty,
+    verification: {
+      status: verification.status || 'notSubmitted',
+      verifiedAt: verification.verifiedAt,
+      rejectionReason: verification.status === 'rejected' ? verification.rejectionReason : '',
+      documentsCount: verification.documents?.length || 0,
+    },
+  }
+}
 
 const getProperties = async (req, res) => {
   try {
@@ -180,7 +197,7 @@ const getProperties = async (req, res) => {
       total,
       page,
       pages: Math.ceil(total / limit),
-      data: properties.map(attachTrustScore),
+      data: properties.map(sanitizePublicProperty),
     })
   } catch (error) {
     console.error('Get properties error:', error)
@@ -202,7 +219,7 @@ const searchProperties = async (req, res) => {
     res.json({
       success: true,
       count: properties.length,
-      data: properties.map(attachTrustScore),
+      data: properties.map(sanitizePublicProperty),
     })
   } catch (error) {
     console.error('Search properties error:', error)
@@ -228,7 +245,7 @@ const getPropertyById = async (req, res) => {
 
     res.json({
       success: true,
-      data: attachTrustScore(property),
+      data: sanitizePublicProperty(property),
     })
   } catch (error) {
     console.error('Get property by ID error:', error)
@@ -250,7 +267,7 @@ const createProperty = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Property created successfully',
-      data: populatedProperty,
+      data: attachTrustScore(populatedProperty),
     })
   } catch (error) {
     console.error('Create property error:', error)
@@ -376,11 +393,70 @@ const saveProperty = async (req, res) => {
       success: true,
       saved: !alreadySaved,
       message: alreadySaved ? 'Property removed from saved list' : 'Property saved successfully',
-      savedProperties: updatedUser.savedProperties,
+      savedProperties: updatedUser.savedProperties.map(sanitizePublicProperty),
     })
   } catch (error) {
     console.error('Save property error:', error.message)
     res.status(500).json({ message: 'Unable to update saved property' })
+  }
+}
+
+const addVerificationDocuments = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid property ID' })
+    }
+
+    const property = await Property.findById(req.params.id)
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' })
+    }
+
+    if (!canManageProperty(req.user, property)) {
+      return res.status(403).json({ message: 'You can only add documents to your own listings' })
+    }
+
+    const documents = Array.isArray(req.body.documents) ? req.body.documents : []
+
+    if (documents.length === 0) {
+      return res.status(400).json({ message: 'At least one document is required' })
+    }
+
+    const invalidDocument = documents.find(
+      (document) => !allowedDocumentTypes.includes(document.type) || !document.url || !document.publicId,
+    )
+
+    if (invalidDocument) {
+      return res.status(400).json({ message: 'Each document requires type, url, and publicId' })
+    }
+
+    property.verification = property.verification || {}
+    property.verification.documents.push(
+      ...documents.map((document) => ({
+        type: document.type,
+        url: document.url,
+        publicId: document.publicId,
+        uploadedAt: new Date(),
+        status: 'submitted',
+      })),
+    )
+    property.verification.status = 'submitted'
+    property.verification.rejectionReason = ''
+    property.verification.verifiedAt = undefined
+    property.verification.verifiedBy = undefined
+
+    await property.save()
+    const updatedProperty = await property.populate('agent', agentFields)
+
+    res.json({
+      success: true,
+      message: 'Verification documents added successfully',
+      data: attachTrustScore(updatedProperty),
+    })
+  } catch (error) {
+    console.error('Add verification documents error:', error.message)
+    res.status(500).json({ message: 'Unable to add verification documents' })
   }
 }
 
@@ -392,4 +468,5 @@ module.exports = {
   updateProperty,
   deleteProperty,
   saveProperty,
+  addVerificationDocuments,
 }

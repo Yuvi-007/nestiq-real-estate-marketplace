@@ -3,6 +3,7 @@ import { MapPin } from 'lucide-react'
 import { formatPrice } from '../../utils/formatPrice'
 import Card from '../ui/Card'
 import ListingQualityChecklist from './ListingQualityChecklist'
+import VerificationStatusBadge from './VerificationStatusBadge'
 
 const fallbackImage =
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80'
@@ -30,6 +31,9 @@ function PropertyFormStepPreview({ values }) {
             <span>{values.location?.city || 'City'} - {values.location?.address || 'Address'}</span>
           </p>
           <p className="mt-4 text-sm leading-6 text-slate-600">{values.description || 'Property description preview.'}</p>
+          <div className="mt-4">
+            <VerificationStatusBadge status={values.verificationDocuments?.length ? 'submitted' : 'notSubmitted'} />
+          </div>
         </div>
       </Card>
       <ListingQualityChecklist data={values} />

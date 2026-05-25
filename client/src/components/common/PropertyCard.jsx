@@ -8,6 +8,7 @@ import { formatPrice } from '../../utils/formatPrice'
 import Badge from '../ui/Badge'
 import Button from '../ui/Button'
 import TrustScoreBadge from './TrustScoreBadge'
+import VerificationStatusBadge from './VerificationStatusBadge'
 
 const badgeStyles = {
   New: 'bg-success/10 text-success',
@@ -148,7 +149,10 @@ function PropertyCard({
         </div>
 
         <div className="mt-3">
-          <TrustScoreBadge trustScore={property.trustScore} compact />
+          <div className="flex flex-wrap gap-2">
+            <TrustScoreBadge trustScore={property.trustScore} compact />
+            <VerificationStatusBadge status={property.verification?.status} />
+          </div>
         </div>
 
         <p className="mt-3 text-xs font-bold uppercase tracking-wide text-success">{getRecencyText(property)}</p>

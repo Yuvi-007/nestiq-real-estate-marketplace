@@ -163,6 +163,10 @@ export const propertyService = {
     const response = await api.delete(`/properties/${id}`)
     return response.data
   },
+  addVerificationDocuments: async (id, documents) => {
+    const response = await api.post(`/properties/${id}/verification-documents`, { documents })
+    return response.data
+  },
 }
 
 export const uploadService = {
@@ -174,6 +178,17 @@ export const uploadService = {
     })
 
     const response = await api.post('/uploads/property-images', formData)
+
+    return response.data
+  },
+  uploadVerificationDocuments: async (files) => {
+    const formData = new FormData()
+
+    files.forEach((file) => {
+      formData.append('documents', file)
+    })
+
+    const response = await api.post('/uploads/verification-documents', formData)
 
     return response.data
   },
@@ -210,6 +225,14 @@ export const adminService = {
   },
   updatePropertyStatus: async (id, status) => {
     const response = await api.patch(`/admin/properties/${id}/status`, { status })
+    return response.data
+  },
+  approveVerification: async (id) => {
+    const response = await api.patch(`/admin/properties/${id}/verify`)
+    return response.data
+  },
+  rejectVerification: async (id, rejectionReason = '') => {
+    const response = await api.patch(`/admin/properties/${id}/reject-verification`, { rejectionReason })
     return response.data
   },
   deleteProperty: async (id) => {

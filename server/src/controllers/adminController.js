@@ -74,6 +74,10 @@ const getAdminStats = async (req, res) => {
       propertyTypeCounts,
       userRoleCounts,
       listingStatusCounts,
+      verificationPending,
+      verificationVerified,
+      verificationRejected,
+      propertiesMissingDocuments,
     ] = await Promise.all([
       User.countDocuments(),
       Property.countDocuments(),
@@ -92,6 +96,16 @@ const getAdminStats = async (req, res) => {
       Property.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
       User.aggregate([{ $group: { _id: '$role', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
       Property.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
+      Property.countDocuments({ 'verification.status': { $in: ['submitted', 'underReview'] } }),
+      Property.countDocuments({ 'verification.status': 'verified' }),
+      Property.countDocuments({ 'verification.status': 'rejected' }),
+      Property.countDocuments({
+        $or: [
+          { 'verification.documents': { $exists: false } },
+          { 'verification.documents': { $size: 0 } },
+          { 'verification.status': { $in: [null, 'notSubmitted'] } },
+        ],
+      }),
     ])
 
     res.json({
@@ -106,6 +120,10 @@ const getAdminStats = async (req, res) => {
         totalBuyers,
         totalSellers,
         totalViews: viewsResult[0]?.total || 0,
+        verificationPending,
+        verificationVerified,
+        verificationRejected,
+        propertiesMissingDocuments,
         recentProperties: recentProperties.map(attachTrustScore),
         ...buildRiskOverview(allPropertiesForRisk),
         propertyTypeBreakdown: formatBreakdown(propertyTypeCounts),
@@ -330,6 +348,78 @@ const setAdminPropertyStatus = async (req, res) => {
   }
 }
 
+const setAdminPropertyVerificationApproved = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid property ID' })
+    }
+
+    const property = await Property.findById(req.params.id)
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' })
+    }
+
+    property.verification = property.verification || {}
+    property.verification.status = 'verified'
+    property.verification.verifiedAt = new Date()
+    property.verification.verifiedBy = req.user._id
+    property.verification.rejectionReason = ''
+    property.verification.documents = (property.verification.documents || []).map((document) => {
+      if (document.status === 'submitted') document.status = 'approved'
+      return document
+    })
+
+    await property.save()
+    const updatedProperty = await property.populate('agent', agentFields)
+
+    res.json({
+      success: true,
+      message: 'Property verification approved successfully',
+      data: attachTrustScore(updatedProperty),
+    })
+  } catch (error) {
+    console.error('Admin approve verification error:', error.message)
+    res.status(500).json({ message: 'Unable to approve verification' })
+  }
+}
+
+const setAdminPropertyVerificationRejected = async (req, res) => {
+  try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid property ID' })
+    }
+
+    const property = await Property.findById(req.params.id)
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' })
+    }
+
+    property.verification = property.verification || {}
+    property.verification.status = 'rejected'
+    property.verification.verifiedAt = undefined
+    property.verification.verifiedBy = undefined
+    property.verification.rejectionReason = req.body.rejectionReason || 'Verification rejected by admin.'
+    property.verification.documents = (property.verification.documents || []).map((document) => {
+      if (document.status === 'submitted') document.status = 'rejected'
+      return document
+    })
+
+    await property.save()
+    const updatedProperty = await property.populate('agent', agentFields)
+
+    res.json({
+      success: true,
+      message: 'Property verification rejected successfully',
+      data: attachTrustScore(updatedProperty),
+    })
+  } catch (error) {
+    console.error('Admin reject verification error:', error.message)
+    res.status(500).json({ message: 'Unable to reject verification' })
+  }
+}
+
 module.exports = {
   getAdminStats,
   getAdminUsers,
@@ -339,4 +429,6 @@ module.exports = {
   setAdminPropertyApproved,
   setAdminPropertyRejected,
   setAdminPropertyStatus,
+  setAdminPropertyVerificationApproved,
+  setAdminPropertyVerificationRejected,
 }

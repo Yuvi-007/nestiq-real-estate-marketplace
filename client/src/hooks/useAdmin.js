@@ -55,6 +55,16 @@ export function useAdmin(roleFilter = '', enabled = true) {
     onSuccess: refreshAdminData,
   })
 
+  const approveVerification = useMutation({
+    mutationFn: adminService.approveVerification,
+    onSuccess: refreshAdminData,
+  })
+
+  const rejectVerification = useMutation({
+    mutationFn: ({ id, rejectionReason }) => adminService.rejectVerification(id, rejectionReason),
+    onSuccess: refreshAdminData,
+  })
+
   const deleteProperty = useMutation({
     mutationFn: adminService.deleteProperty,
     onSuccess: refreshAdminData,
@@ -73,6 +83,8 @@ export function useAdmin(roleFilter = '', enabled = true) {
     approveProperty,
     rejectProperty,
     updatePropertyStatus,
+    approveVerification,
+    rejectVerification,
     deleteProperty,
   }
 }

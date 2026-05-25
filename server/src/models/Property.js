@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
 
+const allowedDocumentTypes = ['ownership', 'taxReceipt', 'idProof', 'utilityBill', 'other']
+const verificationStatuses = ['notSubmitted', 'submitted', 'underReview', 'verified', 'rejected']
+const documentStatuses = ['submitted', 'approved', 'rejected']
+
 const propertySchema = new mongoose.Schema(
   {
     title: {
@@ -109,6 +113,54 @@ const propertySchema = new mongoose.Schema(
       default: 0,
       min: [0, 'Views cannot be negative'],
     },
+    verification: {
+      documents: [
+        {
+          type: {
+            type: String,
+            enum: allowedDocumentTypes,
+            required: true,
+          },
+          url: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          publicId: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          uploadedAt: {
+            type: Date,
+            default: Date.now,
+          },
+          status: {
+            type: String,
+            enum: documentStatuses,
+            default: 'submitted',
+          },
+        },
+      ],
+      status: {
+        type: String,
+        enum: verificationStatuses,
+        default: 'notSubmitted',
+      },
+      verifiedAt: {
+        type: Date,
+      },
+      verifiedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      rejectionReason: {
+        type: String,
+        trim: true,
+        default: '',
+        maxlength: [500, 'Verification rejection reason cannot exceed 500 characters'],
+      },
+    },
   },
   {
     timestamps: true,
@@ -120,6 +172,7 @@ propertySchema.index({ type: 1 })
 propertySchema.index({ price: 1 })
 propertySchema.index({ status: 1 })
 propertySchema.index({ agent: 1 })
+propertySchema.index({ 'verification.status': 1 })
 propertySchema.index({ 'location.city': 1, type: 1, price: 1, status: 1 })
 
 module.exports = mongoose.model('Property', propertySchema)

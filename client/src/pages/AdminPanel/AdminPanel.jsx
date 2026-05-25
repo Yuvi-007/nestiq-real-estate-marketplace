@@ -5,6 +5,7 @@ import AdminListingsTable from '../../components/common/AdminListingsTable'
 import AdminRiskOverview from '../../components/common/AdminRiskOverview'
 import AdminStats from '../../components/common/AdminStats'
 import AdminUsersTable from '../../components/common/AdminUsersTable'
+import AdminVerificationQueue from '../../components/common/AdminVerificationQueue'
 import PageLoader from '../../components/common/PageLoader'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
@@ -34,6 +35,8 @@ function AdminPanel() {
     approveProperty,
     rejectProperty,
     updatePropertyStatus,
+    approveVerification,
+    rejectVerification,
     deleteProperty,
   } = useAdmin(roleFilter, hasAdminAccess)
 
@@ -63,6 +66,8 @@ function AdminPanel() {
     approveProperty.variables ||
     rejectProperty.variables?.id ||
     updatePropertyStatus.variables?.id ||
+    approveVerification.variables ||
+    rejectVerification.variables?.id ||
     deleteProperty.variables
 
   if (!hasAdminAccess) {
@@ -114,6 +119,12 @@ function AdminPanel() {
         <>
           <AdminStats stats={stats} />
           <AdminRiskOverview stats={stats} properties={properties} />
+          <AdminVerificationQueue
+            properties={properties}
+            onApprove={(id) => approveVerification.mutateAsync(id)}
+            onReject={(id, rejectionReason) => rejectVerification.mutateAsync({ id, rejectionReason })}
+            busyId={busyPropertyId}
+          />
           <Suspense
             fallback={
               <PageLoader
