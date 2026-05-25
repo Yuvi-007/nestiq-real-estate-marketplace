@@ -1,12 +1,16 @@
-import { CalendarDays, Heart, Home, MapPin, MessageCircle, Trash2 } from 'lucide-react'
+import { CalendarDays, Heart, Home, MapPin, MessageCircle, Sparkles, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import useAuth from '../../hooks/useAuth'
 import useInquiries from '../../hooks/useInquiries'
 import useSavedProperties from '../../hooks/useSavedProperties'
 import useVisits from '../../hooks/useVisits'
+import { useProperties } from '../../hooks/useProperties'
 import { formatPrice } from '../../utils/formatPrice'
+import { getRecommendationPreferences, getRecommendedProperties } from '../../utils/recommendationEngine'
+import RecommendationQuiz from '../../components/common/RecommendationQuiz'
+import RecommendationResults from '../../components/common/RecommendationResults'
 import SavedSearchesPanel from '../../components/common/SavedSearchesPanel'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
@@ -206,6 +210,7 @@ function VisitList({ visits, isLoading, isError, error, onCancel, cancellingId }
 function Dashboard() {
   const { user } = useAuth()
   const { savedProperties, savingPropertyId, toggleSavedProperty } = useSavedProperties()
+  const { data: marketplaceData } = useProperties({ limit: 50 })
   const {
     inquiries,
     isLoading: inquiriesLoading,
@@ -220,6 +225,13 @@ function Dashboard() {
     updateVisitStatus,
   } = useVisits()
   const [removeError, setRemoveError] = useState('')
+  const [isQuizOpen, setIsQuizOpen] = useState(false)
+  const [storedRecommendationState, setStoredRecommendationState] = useState(() => getRecommendationPreferences())
+  const marketplaceProperties = useMemo(() => marketplaceData?.data || [], [marketplaceData?.data])
+  const recommendations = useMemo(() => {
+    if (!storedRecommendationState?.preferences || !marketplaceProperties.length) return []
+    return getRecommendedProperties(marketplaceProperties, storedRecommendationState.preferences, 3)
+  }, [marketplaceProperties, storedRecommendationState])
 
   const handleRemove = async (propertyId) => {
     setRemoveError('')
@@ -251,6 +263,35 @@ function Dashboard() {
         <DashboardStat icon={MessageCircle} label="Inquiries" value={inquiries.length} />
         <DashboardStat icon={CalendarDays} label="Visits" value={visits.length} />
       </div>
+
+      <section className="space-y-5">
+        <SectionHeader
+          eyebrow="Recommended for you"
+          title="Property matches from your quiz"
+          description="Recommendations are rule-based demo suggestions using your selected preferences and listing data."
+          action={
+            <Button variant="secondary" icon={Sparkles} onClick={() => setIsQuizOpen(true)}>
+              {storedRecommendationState?.preferences ? 'Retake quiz' : 'Find matches'}
+            </Button>
+          }
+        />
+
+        {recommendations.length > 0 ? (
+          <RecommendationResults recommendations={recommendations} compact />
+        ) : (
+          <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-lg font-extrabold text-primary">No quiz preferences saved yet</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Take the property quiz once and your strongest current matches will appear here.
+              </p>
+            </div>
+            <Button icon={Sparkles} onClick={() => setIsQuizOpen(true)} className="sm:shrink-0">
+              Find My Best Property
+            </Button>
+          </Card>
+        )}
+      </section>
 
       <section className="space-y-5">
         <SectionHeader
@@ -312,6 +353,13 @@ function Dashboard() {
           />
         </section>
       </div>
+
+      <RecommendationQuiz
+        isOpen={isQuizOpen}
+        onClose={() => setIsQuizOpen(false)}
+        properties={marketplaceProperties}
+        onComplete={() => setStoredRecommendationState(getRecommendationPreferences())}
+      />
     </section>
   )
 }

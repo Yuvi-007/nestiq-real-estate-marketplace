@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Sparkles } from 'lucide-react'
 
 import CTASection from '../../components/common/CTASection'
 import CityMarquee from '../../components/common/CityMarquee'
@@ -8,9 +10,12 @@ import HowItWorks from '../../components/common/HowItWorks'
 import NeighborhoodSpotlight from '../../components/common/NeighborhoodSpotlight'
 import PopularSearches from '../../components/common/PopularSearches'
 import RecentSearches from '../../components/common/RecentSearches'
+import RecommendationQuiz from '../../components/common/RecommendationQuiz'
 import SearchBar from '../../components/common/SearchBar'
 import StatsSection from '../../components/common/StatsSection'
 import Testimonials from '../../components/common/Testimonials'
+import Button from '../../components/ui/Button'
+import { useProperties } from '../../hooks/useProperties'
 
 const topCities = [
   ['Mumbai', 'mumbai', 'Sea-view apartments and luxury towers'],
@@ -45,6 +50,10 @@ function ExploreTopCities() {
 }
 
 function Home() {
+  const [isQuizOpen, setIsQuizOpen] = useState(false)
+  const { data } = useProperties({ limit: 50 })
+  const properties = data?.data || []
+
   return (
     <div>
       <section
@@ -86,6 +95,14 @@ function Home() {
             className="mt-10 max-w-5xl space-y-4"
           >
             <SearchBar />
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur">
+              <Button variant="accent" icon={Sparkles} onClick={() => setIsQuizOpen(true)}>
+                Find My Best Property
+              </Button>
+              <p className="text-sm font-semibold text-slate-200">
+                Answer a short rule-based quiz and see listings with match scores.
+              </p>
+            </div>
             <PopularSearches compact />
             <RecentSearches compact />
           </motion.div>
@@ -100,6 +117,11 @@ function Home() {
       <NeighborhoodSpotlight />
       <Testimonials />
       <CTASection />
+      <RecommendationQuiz
+        isOpen={isQuizOpen}
+        onClose={() => setIsQuizOpen(false)}
+        properties={properties}
+      />
     </div>
   )
 }

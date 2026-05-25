@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { SlidersHorizontal } from 'lucide-react'
+import { SlidersHorizontal, Sparkles } from 'lucide-react'
 
 import ActiveFilterChips from '../../components/common/ActiveFilterChips'
 import CompareBar from '../../components/common/CompareBar'
@@ -15,6 +15,7 @@ import QuickFilterChips from '../../components/common/QuickFilterChips'
 import QuickViewModal from '../../components/common/QuickViewModal'
 import RecentSearches from '../../components/common/RecentSearches'
 import RecentlyViewed from '../../components/common/RecentlyViewed'
+import RecommendationQuiz from '../../components/common/RecommendationQuiz'
 import PageLoader from '../../components/common/PageLoader'
 import ResultsToolbar from '../../components/common/ResultsToolbar'
 import SavedSearchButton from '../../components/common/SavedSearchButton'
@@ -150,6 +151,7 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
   const [compareProperties, setCompareProperties] = useState([])
   const [highlightedPropertyId, setHighlightedPropertyId] = useState('')
   const [selectedMapPropertyId, setSelectedMapPropertyId] = useState('')
+  const [isQuizOpen, setIsQuizOpen] = useState(false)
 
   const apiParams = useMemo(() => getApiParams(appliedFilters), [appliedFilters])
   const { data, isLoading, isError, error, refetch } = useProperties(apiParams)
@@ -321,6 +323,18 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
         <NearMeButton />
       </div>
 
+      <div className="flex flex-col gap-3 rounded-2xl border border-accent/20 bg-accent/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-extrabold text-primary">Not sure what to choose?</p>
+          <p className="mt-1 text-sm leading-6 text-slate-600">
+            Take a short rule-based quiz and compare listings by match score and reasons.
+          </p>
+        </div>
+        <Button variant="accent" icon={Sparkles} onClick={() => setIsQuizOpen(true)} className="sm:shrink-0">
+          Take the quiz
+        </Button>
+      </div>
+
       <MultiCitySearch selectedCities={appliedFilters.cityList} onChange={applyMultiCity} />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -422,6 +436,11 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
 
       <QuickViewModal property={quickViewProperty} onClose={() => setQuickViewProperty(null)} />
       <CompareBar properties={compareProperties} onRemove={removeCompare} onClear={() => setCompareProperties([])} />
+      <RecommendationQuiz
+        isOpen={isQuizOpen}
+        onClose={() => setIsQuizOpen(false)}
+        properties={properties}
+      />
     </section>
   )
 }
