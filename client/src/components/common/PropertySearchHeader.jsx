@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react'
+import { Home, MapPin, Search } from 'lucide-react'
 
 import Button from '../ui/Button'
 import Card from '../ui/Card'
@@ -42,8 +42,13 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
   }
 
   return (
-    <Card className="bg-white/95 shadow-xl backdrop-blur">
-      <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-3">
+    <Card className="border-primary/10 bg-white/95 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur">
+      <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs font-extrabold uppercase tracking-wide text-accent">Find your fit</p>
+          <h1 className="mt-1 text-2xl font-extrabold text-primary">Search homes with confidence</h1>
+        </div>
+        <div className="flex flex-wrap gap-2">
         {modes.map((mode) => (
           <button
             key={mode}
@@ -56,23 +61,32 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
             {mode}
           </button>
         ))}
+        </div>
       </div>
 
-      <div className="grid gap-3 pt-4 md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
-        <Input
-          type="search"
-          value={filters.q}
-          onChange={(event) => updateFilter('q', event.target.value)}
-          placeholder="Search by city, locality, property name..."
-          aria-label="Search by city, locality, property name"
-        />
-        <Input
-          type="text"
-          value={filters.city}
-          onChange={(event) => updateFilter('city', event.target.value)}
-          placeholder="City or location"
-          aria-label="City or location"
-        />
+      <div className="grid gap-3 pt-4 md:grid-cols-2 xl:grid-cols-[1.25fr_0.9fr_0.9fr_0.9fr_auto]">
+        <label className="relative">
+          <Search size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <Input
+            type="search"
+            value={filters.q}
+            onChange={(event) => updateFilter('q', event.target.value)}
+            placeholder="Search by locality, property name..."
+            aria-label="Search by city, locality, property name"
+            className="pl-10"
+          />
+        </label>
+        <label className="relative">
+          <MapPin size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <Input
+            type="text"
+            value={filters.city}
+            onChange={(event) => updateFilter('city', event.target.value)}
+            placeholder="City or location"
+            aria-label="City or location"
+            className="pl-10"
+          />
+        </label>
         <Input
           as="select"
           value={filters.type}
@@ -98,7 +112,7 @@ function PropertySearchHeader({ filters, onChange, onSearch }) {
           ))}
           <option value="Custom budget">Custom budget</option>
         </Input>
-        <Button variant="accent" size="lg" icon={Search} onClick={onSearch} className="w-full xl:w-auto">
+        <Button variant="accent" size="lg" icon={Home} onClick={onSearch} className="w-full xl:w-auto">
           Search
         </Button>
       </div>

@@ -31,7 +31,8 @@ function ActiveFilterChips({ filters, onRemove, onClear }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+      <span className="text-xs font-extrabold uppercase tracking-wide text-muted">Active</span>
       {chips.map((chip) => (
         <button
           key={chip.key}
@@ -45,7 +46,7 @@ function ActiveFilterChips({ filters, onRemove, onClear }) {
           </Badge>
         </button>
       ))}
-      <button type="button" onClick={onClear} className="text-sm font-extrabold text-accent">
+      <button type="button" onClick={onClear} className="ml-auto text-sm font-extrabold text-accent">
         Clear all
       </button>
     </div>

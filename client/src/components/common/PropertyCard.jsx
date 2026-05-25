@@ -101,10 +101,10 @@ function PropertyCard({
       animate={{ opacity: 1, y: 0 }}
       onMouseEnter={() => onHover?.(property._id)}
       onMouseLeave={() => onHover?.('')}
-      className={`group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+      className={`group overflow-hidden rounded-3xl border bg-white shadow-sm shadow-slate-900/5 transition hover:-translate-y-0.5 hover:shadow-[0_24px_80px_rgba(15,23,42,0.12)] ${
         isHighlighted ? 'border-accent ring-4 ring-accent/20' : 'border-slate-200'
       } ${
-        isList ? 'grid min-w-0 md:grid-cols-[minmax(240px,320px)_minmax(0,1fr)]' : 'flex h-full min-w-0 flex-col'
+        isList ? 'grid min-w-0 md:grid-cols-[minmax(240px,340px)_minmax(0,1fr)]' : 'flex h-full min-w-0 flex-col'
       }`}
     >
       <div className={`relative overflow-hidden bg-slate-100 ${isList ? 'aspect-[16/10] md:aspect-auto md:min-h-full' : 'aspect-[4/3]'}`}>
@@ -126,7 +126,7 @@ function PropertyCard({
           whileTap={{ scale: 0.82 }}
           onClick={handleSaveClick}
           disabled={isSaving}
-          className={`absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-sm transition ${
+          className={`absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-sm backdrop-blur transition ${
             isSaved ? 'text-danger' : 'text-muted hover:text-danger'
           } ${isSaving ? 'cursor-wait opacity-70' : ''}`}
           aria-label={isSaved ? 'Unsave property' : 'Save property'}
@@ -141,7 +141,7 @@ function PropertyCard({
             <p className="text-2xl font-extrabold text-primary">{formatPrice(property.price)}</p>
             <p className="mt-1 text-xs font-bold text-muted">{emiEstimate}</p>
             <Link to={`/properties/${property._id}`}>
-              <h2 className={`${isList ? 'text-xl' : 'text-lg'} mt-2 line-clamp-2 font-extrabold leading-snug text-charcoal hover:text-primary`}>
+              <h2 className={`${isList ? 'text-xl' : 'text-lg'} mt-2 line-clamp-2 font-extrabold leading-snug text-charcoal transition hover:text-primary`}>
                 {property.title}
               </h2>
             </Link>
@@ -166,14 +166,14 @@ function PropertyCard({
           </p>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2 rounded-xl bg-surface p-3 text-sm">
+        <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl border border-slate-200 bg-surface p-2 text-sm">
           {stats.map((item) => {
             const Icon = item.icon
 
             return (
-              <span key={item.label} className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 font-bold text-charcoal shadow-sm">
+              <span key={item.label} className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white px-2 py-2 font-bold text-charcoal shadow-sm">
                 <Icon size={16} className="shrink-0 text-muted" />
-                <span className="whitespace-nowrap">{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </span>
             )
           })}

@@ -22,7 +22,6 @@ import SavedSearchButton from '../../components/common/SavedSearchButton'
 import SearchIntentBar from '../../components/common/SearchIntentBar'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
-import PageHeader from '../../components/ui/PageHeader'
 import SkeletonCard from '../../components/ui/SkeletonCard'
 import { useProperties } from '../../hooks/useProperties'
 import { saveRecentSearch } from '../../utils/recentSearches'
@@ -306,14 +305,8 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
   }
 
   return (
-    <section className="space-y-6">
-      <div className="space-y-5">
-        <PageHeader
-          eyebrow="NestIQ marketplace"
-          title="Property Search Results"
-          description="Browse verified listings, compare smarter, and use transparent trust signals before shortlisting."
-        />
-
+    <section className="space-y-5">
+      <div className="space-y-4">
         <SearchIntentBar filters={appliedFilters} onApply={updateUrlAndApply} />
         <PropertySearchHeader filters={draftFilters} onChange={setDraftFilters} onSearch={applyFilters} />
       </div>
@@ -345,16 +338,18 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
         <SavedSearchButton filters={appliedFilters} queryParams={appliedSearchParams} />
       </div>
 
-      <ResultsToolbar
-        count={isLoading ? 0 : properties.length}
-        filters={appliedFilters}
-        onSortChange={changeSort}
-        viewMode={viewMode}
-        onViewChange={setViewMode}
-        onOpenFilters={() => setIsFilterDrawerOpen(true)}
-      />
+      <div className="sticky top-[72px] z-20 -mx-4 space-y-3 border-y border-slate-200 bg-surface/95 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <ResultsToolbar
+          count={isLoading ? 0 : properties.length}
+          filters={appliedFilters}
+          onSortChange={changeSort}
+          viewMode={viewMode}
+          onViewChange={setViewMode}
+          onOpenFilters={() => setIsFilterDrawerOpen(true)}
+        />
 
-      <ActiveFilterChips filters={appliedFilters} onRemove={removeFilter} onClear={clearFilters} />
+        <ActiveFilterChips filters={appliedFilters} onRemove={removeFilter} onClear={clearFilters} />
+      </div>
 
       <RecentlyViewed
         comparedIds={comparedIds}
@@ -363,13 +358,13 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
       />
 
       {viewMode === 'map' ? (
-        <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="grid gap-6 lg:grid-cols-[304px_minmax(0,1fr)]">
           <FilterSidebar
             filters={draftFilters}
             onChange={setDraftFilters}
             onApply={applyFilters}
             onClear={clearFilters}
-            className="hidden lg:block lg:sticky lg:top-24 lg:self-start"
+            className="hidden lg:block lg:sticky lg:top-48 lg:self-start"
           />
           <Suspense
             fallback={
@@ -412,13 +407,13 @@ function PropertiesContent({ initialUrlFilters, setSearchParams }) {
           </div>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="grid gap-6 lg:grid-cols-[304px_minmax(0,1fr)]">
           <FilterSidebar
             filters={draftFilters}
             onChange={setDraftFilters}
             onApply={applyFilters}
             onClear={clearFilters}
-            className="hidden lg:block lg:sticky lg:top-24 lg:self-start"
+            className="hidden lg:block lg:sticky lg:top-48 lg:self-start"
           />
 
           <div className="min-w-0 pb-24 md:pb-0">{renderResults()}</div>

@@ -34,10 +34,10 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
   }
 
   return (
-    <Card as="aside" className={className}>
+    <Card as="aside" className={`shadow-[0_18px_60px_rgba(15,23,42,0.07)] ${className}`}>
       <div className="flex items-center justify-between gap-3">
-        <SectionHeader eyebrow="Marketplace" title="Refine Results" className="[&_h2]:text-xl [&_p]:text-xs" />
-        <Button variant="secondary" size="sm" icon={RotateCcw} onClick={onClear} className="text-muted hover:border-danger hover:text-danger">
+        <SectionHeader eyebrow="Filters" title="Refine results" className="[&_h2]:text-xl [&_p]:text-xs" />
+        <Button variant="secondary" size="sm" icon={RotateCcw} onClick={onClear} className="text-muted hover:border-danger hover:bg-danger/10 hover:text-danger">
           Clear
         </Button>
       </div>
@@ -56,7 +56,7 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
         <FilterSection title="Property Type">
           <div className="grid gap-2">
             {propertyTypes.map((type) => (
-              <label key={type || 'any'} className="flex items-center gap-3 text-sm font-semibold text-charcoal">
+            <label key={type || 'any'} className="flex items-center gap-3 rounded-xl px-2 py-1.5 text-sm font-semibold text-charcoal transition hover:bg-surface">
                 <input
                   type="radio"
                   name="property-type"
@@ -98,10 +98,10 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
                 key={bhk}
                 type="button"
                 onClick={() => updateFilter('bhk', filters.bhk === bhk ? '' : bhk)}
-                className={`rounded-xl border px-3 py-2 text-sm font-bold transition ${
+              className={`rounded-xl border px-3 py-2 text-sm font-bold transition ${
                   filters.bhk === bhk
                     ? 'border-primary bg-primary text-white'
-                    : 'border-slate-200 bg-surface text-charcoal hover:border-accent'
+                    : 'border-slate-200 bg-white text-charcoal hover:border-accent hover:bg-accent/10'
                 }`}
               >
                 {bhk === '4' ? '4+' : bhk}
@@ -113,7 +113,7 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
         <FilterSection title="Amenities">
           <div className="grid gap-2">
             {amenityOptions.map((amenity) => (
-              <label key={amenity} className="flex items-center gap-3 text-sm font-semibold text-charcoal">
+            <label key={amenity} className="flex items-center gap-3 rounded-xl px-2 py-1.5 text-sm font-semibold text-charcoal transition hover:bg-surface">
                 <input
                   type="checkbox"
                   checked={(filters.amenities || []).includes(amenity)}
@@ -129,7 +129,7 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
         <FilterSection title="Furnishing">
           <div className="grid gap-2">
             {furnishingOptions.map((furnishing) => (
-              <label key={furnishing} className="flex items-center gap-3 text-sm font-semibold text-charcoal">
+            <label key={furnishing} className="flex items-center gap-3 rounded-xl px-2 py-1.5 text-sm font-semibold text-charcoal transition hover:bg-surface">
                 <input
                   type="checkbox"
                   checked={(filters.furnishing || []).includes(furnishing)}
@@ -143,7 +143,7 @@ function FilterSidebar({ filters, onChange, onApply, onClear, className = '' }) 
         </FilterSection>
 
         <FilterSection title="Trust">
-          <label className="flex items-center gap-3 text-sm font-semibold text-charcoal">
+          <label className="flex items-center gap-3 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
             <input
               type="checkbox"
               checked={filters.verifiedOnly}

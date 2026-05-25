@@ -17,7 +17,7 @@ function MainLayout() {
         className={
           isHome
             ? 'min-h-[calc(100vh-9rem)] w-full pb-24 lg:pb-10'
-            : `mx-auto min-h-[calc(100vh-9rem)] w-full max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pb-10 ${
+            : `mx-auto min-h-[calc(100vh-9rem)] w-full max-w-7xl px-4 pt-6 sm:px-6 lg:px-8 lg:pt-8 lg:pb-10 ${
                 isPropertyDetail ? 'pb-40 md:pb-10' : 'pb-24'
               }`
         }

@@ -1,3 +1,4 @@
+import { Grid2X2, Images } from 'lucide-react'
 import { useState } from 'react'
 
 import ImageLightbox from './ImageLightbox'
@@ -29,6 +30,7 @@ function ImageGallery({ images = [], title }) {
       : galleryImages.filter((image) => image.category === activeCategory)
   const visibleImages = filteredImages.length > 0 ? filteredImages : galleryImages
   const activeImage = visibleImages.find((image) => image.src === selectedImage) || visibleImages[0] || primaryImage
+  const mosaicImages = galleryImages.length > 1 ? galleryImages.slice(1, 5) : galleryImages
 
   const openLightbox = (image) => {
     const index = visibleImages.findIndex((item) => item.src === image.src)
@@ -48,7 +50,7 @@ function ImageGallery({ images = [], title }) {
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-3">
       <div className="flex gap-2 overflow-x-auto pb-1">
         {categories.map((category) => (
           <button
@@ -69,16 +71,42 @@ function ImageGallery({ images = [], title }) {
         ))}
       </div>
 
-      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 shadow-sm">
-        <button type="button" onClick={() => openLightbox(activeImage)} className="block h-full w-full" aria-label="Open image gallery">
-          <img src={activeImage.src} alt={title} className="h-full w-full object-cover transition duration-500 hover:scale-[1.02]" />
+      <div className="grid gap-2 overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.85fr)]">
+        <button
+          type="button"
+          onClick={() => openLightbox(activeImage)}
+          className="group relative block aspect-[16/10] overflow-hidden bg-slate-100 lg:aspect-[16/9]"
+          aria-label="Open image gallery"
+        >
+          <img src={activeImage.src} alt={title} className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+          <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-primary/85 px-3 py-1.5 text-xs font-extrabold text-white backdrop-blur">
+            <Images size={14} />
+            {activeImage.category}
+          </span>
         </button>
-        <span className="absolute bottom-4 left-4 rounded-full bg-primary/85 px-3 py-1 text-xs font-extrabold text-white backdrop-blur">
-          {activeImage.category}
-        </span>
+
+        <div className="hidden grid-cols-2 gap-2 lg:grid">
+          {mosaicImages.map((image, index) => (
+            <button
+              key={`${image.src}-${image.category}`}
+              type="button"
+              onClick={() => openLightbox(image)}
+              className="group relative min-h-0 overflow-hidden bg-slate-100"
+              aria-label="Open property image"
+            >
+              <img src={image.src} alt={title} className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" />
+              {index === Math.min(mosaicImages.length - 1, 3) && (
+                <span className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-extrabold text-primary shadow-sm backdrop-blur">
+                  <Grid2X2 size={14} />
+                  View photos
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto pb-1">
+      <div className="flex gap-3 overflow-x-auto pb-1 lg:hidden">
         {visibleImages.map((image) => (
           <button
             key={`${image.src}-${image.category}`}

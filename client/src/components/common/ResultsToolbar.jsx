@@ -1,3 +1,5 @@
+import { SlidersHorizontal } from 'lucide-react'
+
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 import SortDropdown from './SortDropdown'
@@ -22,12 +24,12 @@ function ResultsToolbar({ count, filters, onSortChange, viewMode, onViewChange, 
     <Card className="px-4 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-lg font-extrabold text-primary">Showing {count} properties</p>
-          <p className="mt-1 text-sm text-slate-600">{getSummary(filters)}</p>
+          <p className="text-xl font-extrabold text-primary">{count} properties</p>
+          <p className="mt-1 text-sm leading-6 text-slate-600">{getSummary(filters)}</p>
         </div>
 
-        <div className="flex min-w-0 flex-wrap items-center gap-3">
-          <Button variant="secondary" size="sm" onClick={onOpenFilters} className="lg:hidden">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+          <Button variant="secondary" size="sm" icon={SlidersHorizontal} onClick={onOpenFilters} className="lg:hidden">
             Filters
           </Button>
           <SortDropdown value={filters.sort} onChange={onSortChange} />
